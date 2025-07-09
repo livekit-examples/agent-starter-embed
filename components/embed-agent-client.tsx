@@ -18,7 +18,7 @@ interface AppProps {
   appConfig: AppConfig;
 }
 
-export function App({ appConfig }: AppProps) {
+function EmbedAgentClient({ appConfig }: AppProps) {
   const room = useMemo(() => new Room(), []);
   const [sessionStarted, setSessionStarted] = useState(false);
   const { connectionDetails, refreshConnectionDetails } = useConnectionDetails();
@@ -43,19 +43,29 @@ export function App({ appConfig }: AppProps) {
   }, [room, refreshConnectionDetails]);
 
   useEffect(() => {
-    if (sessionStarted && room.state === 'disconnected' && connectionDetails) {
-      Promise.all([
-        room.localParticipant.setMicrophoneEnabled(true, undefined, {
-          preConnectBuffer: appConfig.isPreConnectBufferEnabled,
-        }),
-        room.connect(connectionDetails.serverUrl, connectionDetails.participantToken),
-      ]).catch((error) => {
-        toastAlert({
-          title: 'There was an error connecting to the agent',
-          description: `${error.name}: ${error.message}`,
-        });
-      });
+    if (!sessionStarted) {
+      return;
     }
+    if (room.state !== 'disconnected') {
+      return;
+    }
+    if (!connectionDetails) {
+      return;
+    }
+
+    Promise.all([
+      room.localParticipant.setMicrophoneEnabled(true, undefined, {
+        preConnectBuffer: appConfig.isPreConnectBufferEnabled,
+      }),
+      room.connect(connectionDetails.serverUrl, connectionDetails.participantToken),
+    ]).catch((error) => {
+      console.error('Error connecting to agent:', error);
+      toastAlert({
+        title: 'There was an error connecting to the agent',
+        description: `${error.name}: ${error.message}`,
+      });
+    });
+
     return () => {
       room.disconnect();
     };
@@ -64,7 +74,9 @@ export function App({ appConfig }: AppProps) {
   const { startButtonText } = appConfig;
 
   return (
-    <>
+    // FIXME: something is wrong spacing wise here, without the margin of 1px around the outside,
+    // the border gets cut off the edge of the screen?
+    <div className="relative h-16 bg-background rounded-[31px] border px-3 h-16 drop-shadow-md/3">
       <MotionWelcome
         key="welcome"
         startButtonText={startButtonText}
@@ -78,7 +90,9 @@ export function App({ appConfig }: AppProps) {
       <RoomContext.Provider value={room}>
         <RoomAudioRenderer />
         <StartAudio label="Start Audio" />
+
         {/* --- */}
+
         <MotionSessionView
           key="session-view"
           appConfig={appConfig}
@@ -95,6 +109,7 @@ export function App({ appConfig }: AppProps) {
       </RoomContext.Provider>
 
       <Toaster />
-    </>
+    </div>
   );
 }
+export default EmbedAgentClient;
