@@ -1,33 +1,37 @@
-import { Button } from '@/components/ui/button';
+"use client";
 
-interface WelcomeProps {
-  disabled: boolean;
-  startButtonText: string;
-  onStartCall: () => void;
-}
+import { useMemo } from "react";
 
-export const Welcome = ({
-  disabled,
-  startButtonText,
-  onStartCall,
-  ref,
-}: React.ComponentProps<'div'> & WelcomeProps) => {
+export default function Welcome() {
+  const embedUrl = useMemo(() => {
+    const url = new URL(window.location.href);
+    url.pathname = "/embed";
+    return url.toString();
+  }, []);
+
   return (
-    <div
-      ref={ref}
-      inert={disabled}
-      className="absolute inset-0"
-    >
-      <div className="flex gap-4 items-center justify-between h-full gap-1 px-3">
-        <div className="pl-3">
-          <img src="/lk-logo.svg" alt="LiveKit Logo" className="block size-6 dark:hidden" />
-          <img src="/lk-logo-dark.svg" alt="LiveKit Logo" className="hidden size-6 dark:block" />
-        </div>
+    <div className="flex flex-col items-center pt-16">
+      <div className="flex flex-col gap-4 max-w-xl p-4 border rounded-md bg-bg3">
+        <h1 className="font-bold text-2xl">LiveKit Embed Starter</h1>
+        <p>
+          The embed starter example contains an example implementation of an embeddable LiveKit control
+          that can be added to a web app to talk to your agent, no custom javascript code required.
+        </p>
 
-        <Button variant="primary" size="lg" onClick={onStartCall} className="w-48 font-mono">
-          Chat with Agent
-        </Button>
+        <h2 className="font-bold text-lg">Example</h2>
+        <iframe
+          src={embedUrl}
+          style={{ width: 320, height: 64 }}
+        />
+
+        <h2 className="font-bold text-lg">Usage</h2>
+        <p>
+          To include the embed into a web app, paste the below embed HTML into the page:
+        </p>
+        <pre>
+          {`<iframe\n  src="${embedUrl}"\n  style="width: 320px; height: 64px;"\n></iframe>`}
+        </pre>
       </div>
     </div>
   );
-};
+}

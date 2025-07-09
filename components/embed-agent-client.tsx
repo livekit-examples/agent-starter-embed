@@ -7,7 +7,7 @@ import { RoomAudioRenderer, RoomContext, StartAudio } from '@livekit/components-
 import { toastAlert } from '@/components/alert-toast';
 import { SessionView } from '@/components/session-view';
 import { Toaster } from '@/components/ui/sonner';
-import { Welcome } from '@/components/welcome';
+import { Welcome } from '@/components/embed/welcome';
 import useConnectionDetails from '@/hooks/useConnectionDetails';
 import type { AppConfig } from '@/lib/types';
 
@@ -71,20 +71,17 @@ function EmbedAgentClient({ appConfig }: AppProps) {
     };
   }, [room, sessionStarted, connectionDetails, appConfig.isPreConnectBufferEnabled]);
 
-  const { startButtonText } = appConfig;
-
   return (
     // FIXME: something is wrong spacing wise here, without the margin of 1px around the outside,
     // the border gets cut off the edge of the screen?
     <div className="relative h-16 bg-background rounded-[31px] border px-3 h-16 drop-shadow-md/3">
       <MotionWelcome
         key="welcome"
-        startButtonText={startButtonText}
         onStartCall={() => setSessionStarted(true)}
         disabled={sessionStarted}
-        initial={{ opacity: 0 }}
+        initial={{ opacity: 1 }}
         animate={{ opacity: sessionStarted ? 0 : 1 }}
-        transition={{ duration: 0.5, ease: 'linear', delay: sessionStarted ? 0 : 0.5 }}
+        transition={{ duration: 0.25, ease: 'linear', delay: sessionStarted ? 0 : 0.5 }}
       />
 
       <RoomContext.Provider value={room}>
@@ -103,7 +100,7 @@ function EmbedAgentClient({ appConfig }: AppProps) {
           transition={{
             duration: 0.5,
             ease: 'linear',
-            delay: sessionStarted ? 0.5 : 0,
+            delay: sessionStarted ? 0.25 : 0,
           }}
         />
       </RoomContext.Provider>

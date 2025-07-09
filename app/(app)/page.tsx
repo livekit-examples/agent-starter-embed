@@ -1,9 +1,9 @@
-import Welcome from "../components/welcome";
+import WelcomeDynamic from "@/components/welcome-dynamic";
 
-export default async function Page() {
+export default function Page() {
   return (
     <div className="fixed inset-0 bg-background overflow-auto">
-      <Welcome />
+      <WelcomeDynamic />
     </div>
   );
 }
