@@ -53,18 +53,21 @@ function EmbedAgentClient({ appConfig }: AppProps) {
       return;
     }
 
-    Promise.all([
-      room.localParticipant.setMicrophoneEnabled(true, undefined, {
-        preConnectBuffer: appConfig.isPreConnectBufferEnabled,
-      }),
-      room.connect(connectionDetails.serverUrl, connectionDetails.participantToken),
-    ]).catch((error) => {
-      console.error('Error connecting to agent:', error);
-      toastAlert({
-        title: 'There was an error connecting to the agent',
-        description: `${error.name}: ${error.message}`,
-      });
-    });
+    const connect = async () => {
+      try {
+        await room.connect(connectionDetails.serverUrl, connectionDetails.participantToken);
+        await room.localParticipant.setMicrophoneEnabled(true, undefined, {
+          preConnectBuffer: appConfig.isPreConnectBufferEnabled,
+        });
+      } catch (error: any) {
+        console.error('Error connecting to agent:', error);
+        toastAlert({
+          title: 'There was an error connecting to the agent',
+          description: `${error.name}: ${error.message}`,
+        });
+      }
+    };
+    connect();
 
     return () => {
       room.disconnect();
