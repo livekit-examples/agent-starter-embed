@@ -4,8 +4,7 @@ import { useMemo } from "react";
 
 export default function Welcome() {
   const embedUrl = useMemo(() => {
-    const url = new URL(window.location.href);
-    url.pathname = "/embed";
+    const url = new URL('/embed', window.location.origin);
     return url.toString();
   }, []);
 

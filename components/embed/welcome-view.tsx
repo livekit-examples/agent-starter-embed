@@ -1,15 +1,15 @@
 import { Button } from '@/components/ui/button';
 
-type WelcomeProps = {
+type WelcomeViewProps = {
   disabled: boolean;
   onStartCall: () => void;
 };
 
-export const Welcome = ({
+export const WelcomeView = ({
   disabled,
   onStartCall,
   ref,
-}: React.ComponentProps<'div'> & WelcomeProps) => {
+}: React.ComponentProps<'div'> & WelcomeViewProps) => {
   return (
     <div
       ref={ref}

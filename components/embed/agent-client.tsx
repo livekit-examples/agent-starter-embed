@@ -5,13 +5,13 @@ import { Room, RoomEvent } from 'livekit-client';
 import { motion } from 'motion/react';
 import { RoomAudioRenderer, RoomContext, StartAudio } from '@livekit/components-react';
 import { toastAlert } from '@/components/alert-toast';
-import { SessionView } from '@/components/session-view';
 import { Toaster } from '@/components/ui/sonner';
-import { Welcome } from '@/components/embed/welcome';
+import { WelcomeView } from '@/components/embed/welcome-view';
+import { SessionView } from '@/components/embed/session-view';
 import useConnectionDetails from '@/hooks/useConnectionDetails';
 import type { AppConfig } from '@/lib/types';
 
-const MotionWelcome = motion.create(Welcome);
+const MotionWelcomeView = motion.create(WelcomeView);
 const MotionSessionView = motion.create(SessionView);
 
 interface AppProps {
@@ -72,10 +72,8 @@ function EmbedAgentClient({ appConfig }: AppProps) {
   }, [room, sessionStarted, connectionDetails, appConfig.isPreConnectBufferEnabled]);
 
   return (
-    // FIXME: something is wrong spacing wise here, without the margin of 1px around the outside,
-    // the border gets cut off the edge of the screen?
     <div className="relative h-16 bg-background rounded-[31px] border px-3 h-16 drop-shadow-md/3">
-      <MotionWelcome
+      <MotionWelcomeView
         key="welcome"
         onStartCall={() => setSessionStarted(true)}
         disabled={sessionStarted}
