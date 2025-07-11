@@ -1,6 +1,10 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { AppConfig } from "@/lib/types";
+
+import EmbedFixedAgentClient from "./embed-fixed/agent-client";
+import { getAppConfig } from "@/lib/utils";
 
 export default function Welcome() {
   const embedUrl = useMemo(() => {
@@ -31,6 +35,23 @@ export default function Welcome() {
           {`<iframe\n  src="${embedUrl}"\n  style="width: 320px; height: 64px;"\n></iframe>`}
         </pre>
       </div>
+
+      <Test />
     </div>
+  );
+}
+
+function Test() {
+  const [appConfig, setAppConfig] = useState<AppConfig | null>(null);
+  useEffect(() => {
+    getAppConfig(window.location.origin).then(setAppConfig);
+  }, []);
+
+  if (!appConfig) {
+    return null;
+  }
+
+  return (
+    <EmbedFixedAgentClient appConfig={appConfig} />
   );
 }
