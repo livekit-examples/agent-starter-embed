@@ -5,12 +5,25 @@ import { AppConfig } from "@/lib/types";
 
 import EmbedFixedAgentClient from "./embed-fixed/agent-client";
 import { getAppConfig } from "@/lib/utils";
+import Script from "next/script";
 
 export default function Welcome() {
   const embedUrl = useMemo(() => {
     const url = new URL('/embed', window.location.origin);
     return url.toString();
   }, []);
+
+  // useEffect(() => {
+  //   if (document.readyState !== 'complete') {
+  //     return;
+  //   }
+
+  //   const script = document.createElement('script');
+  //   script.src = "/embed-fixed.js";
+  //   return () => {
+  //     document.body.appendChild(script);
+  //   };
+  // }, []);
 
   return (
     <div className="flex flex-col items-center pt-16">
@@ -36,7 +49,13 @@ export default function Welcome() {
         </pre>
       </div>
 
-      <Test />
+      <Script src="/embed-fixed.js" strategy="lazyOnload" />
+
+      {/* {/* <Test /> */}
+      {/* <iframe */}
+      {/*   src="/embed-fixed" */}
+      {/*   style={{ position: 'fixed', bottom: 0, right: 0, height: 544 }} */}
+      {/* /> */}
     </div>
   );
 }

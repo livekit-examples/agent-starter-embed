@@ -14,15 +14,16 @@ import { Toaster } from '@/components/ui/sonner';
 import { CaretUpIcon } from '@phosphor-icons/react';
 
 type FixedButtonViewProps = {
-  open: boolean
-  onClick: React.ComponentProps<'div'>['onClick'],
+  open: boolean;
+  onOpen: () => void;
+  onClose: () => void;
 };
 
-const FixedButton = ({ open, onClick }: FixedButtonViewProps) => {
+export const FixedButton = ({ open, onOpen, onClose }: FixedButtonViewProps) => {
   return (
     <div
       className="fixed bottom-4 right-4"
-      onClick={onClick}
+      onClick={() => open ? onClose() : onOpen()}
     >
       <Button
         variant="primary"
@@ -42,11 +43,38 @@ const FixedButton = ({ open, onClick }: FixedButtonViewProps) => {
   );
 };
 
-interface AppProps {
-  appConfig: AppConfig;
+export const Backdrop = ({ onClose }: { onClose: () => void }) => {
+  return (
+    <div className="fixed inset-0" onClick={onClose} />
+  );
 }
 
-function EmbedFixedAgentClient({ appConfig }: AppProps) {
+export const ManagedFixedButton = () => {
+  const [open, setOpen] = useState(false);
+
+  const onOpen = () => {
+    setOpen(true);
+    window.parent.postMessage(JSON.stringify({type: 'open'}));
+  };
+
+  const onClose = () => {
+    setOpen(false);
+    window.parent.postMessage(JSON.stringify({type: 'close'}));
+  };
+
+  return (
+    <>
+      <Backdrop onClose={onClose} />
+      <FixedButton open={open} onOpen={onOpen} onClose={onClose} />
+    </>
+  );
+};
+
+export type EmbedFixedAgentClientProps = {
+  appConfig: AppConfig;
+};
+
+function EmbedFixedAgentClient({ appConfig }: EmbedFixedAgentClientProps) {
   const [popupOpen, setPopupOpen] = useState(false);
 
   const room = useMemo(() => new Room(), []);
@@ -108,12 +136,13 @@ function EmbedFixedAgentClient({ appConfig }: AppProps) {
     <>
       {/* Backdrop */}
       {popupOpen ? (
-        <div className="fixed inset-0" onClick={() => setPopupOpen(false)} />
+        <Backdrop onClose={() => setPopupOpen(false)} />
       ) : null}
 
       <FixedButton
         open={popupOpen}
-        onClick={() => setPopupOpen(open => !open)}
+        onOpen={() => setPopupOpen(true)}
+        onClose={() => setPopupOpen(false)}
       />
 
       <motion.div
@@ -144,4 +173,5 @@ function EmbedFixedAgentClient({ appConfig }: AppProps) {
     </>
   );
 }
+
 export default EmbedFixedAgentClient;
