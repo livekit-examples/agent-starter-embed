@@ -2,8 +2,8 @@ import type { AppConfig } from './lib/types';
 
 export const APP_CONFIG_DEFAULTS: AppConfig = {
   companyName: 'LiveKit',
-  pageTitle: 'LiveKit Voice Agent',
-  pageDescription: 'A voice agent built with LiveKit',
+  pageTitle: 'LiveKit Embed',
+  pageDescription: 'A web embed connected to an agent, built with LiveKit',
 
   supportsChatInput: true,
   supportsVideoInput: true,
