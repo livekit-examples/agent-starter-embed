@@ -59,6 +59,7 @@ function EmbedAgentClient({ appConfig }: AppProps) {
         await room.localParticipant.setMicrophoneEnabled(true, undefined, {
           preConnectBuffer: appConfig.isPreConnectBufferEnabled,
         });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         console.error('Error connecting to agent:', error);
         toastAlert({
