@@ -1,22 +1,22 @@
 <img src="./.github/assets/app-icon.png" alt="Voice Assistant App Icon" width="100" height="100">
 
-# Web Voice Assistant
+# Embed Starter
 
-This is a starter template for [LiveKit Agents](https://docs.livekit.io/agents) that provides a simple voice interface using the [LiveKit JavaScript SDK](https://github.com/livekit/client-sdk-js). It supports [voice](https://docs.livekit.io/agents/start/voice-ai), [transcriptions](https://docs.livekit.io/agents/build/text/), and [virtual avatars](https://docs.livekit.io/agents/integrations/avatar).
+This is a starter template for [LiveKit Agents](https://docs.livekit.io/agents) that provides an example of how you might approach building a LiveKit web embed using the [LiveKit JavaScript SDK](https://github.com/livekit/client-sdk-js). It supports [voice](https://docs.livekit.io/agents/start/voice-ai), [transcriptions](https://docs.livekit.io/agents/build/text/), and [virtual avatars](https://docs.livekit.io/agents/integrations/avatar).
 
 This template is built with Next.js and is free for you to use or modify as you see fit.
-s
-![App screenshot](/.github/assets/frontend-screenshot.jpeg)
+
+![App screenshot](/.github/assets/frontend-screenshot.png)
 
 ## Getting started
 
 > [!TIP]
-> If you'd like to try this application without modification, you can deploy an instance in just a few clicks with [LiveKit Cloud Sandbox](https://cloud.livekit.io/projects/p_/sandbox/templates/voice-assistant-frontend).
+> If you'd like to try this application without modification, you can deploy an instance in just a few clicks with [LiveKit Cloud Sandbox](https://cloud.livekit.io/projects/p_/sandbox/templates/embed).
 
 Run the following command to automatically clone this template.
 
 ```bash
-lk app create --template voice-assistant-frontend
+lk app create --template embed
 ```
 
 Then run the app with:
@@ -26,7 +26,7 @@ pnpm install
 pnpm dev
 ```
 
-And open http://localhost:3000 in your browser.
+Open http://localhost:3000 in your browser, and follow the instructions.
 
 You'll also need an agent to speak with. Try our [Voice AI Quickstart](https://docs.livekit.io/start/voice-ai) for the easiest way to get started.
 
