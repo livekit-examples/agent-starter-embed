@@ -1,10 +1,8 @@
-"use client";
+'use client';
 
-import { useEffect, useMemo, useState } from "react";
-import { AppConfig } from "@/lib/types";
+import { useMemo } from "react";
 
 import EmbedFixedAgentClient from "./embed-fixed/agent-client";
-import { getAppConfig } from "@/lib/env";
 import Script from "next/script";
 import { APP_CONFIG_DEFAULTS } from "@/app-config";
 
@@ -14,32 +12,18 @@ export default function Welcome() {
     return url.toString();
   }, []);
 
-  // useEffect(() => {
-  //   if (document.readyState !== 'complete') {
-  //     return;
-  //   }
-
-  //   const script = document.createElement('script');
-  //   script.src = "/embed-fixed.js";
-  //   return () => {
-  //     document.body.appendChild(script);
-  //   };
-  // }, []);
-
   return (
     <div className="flex flex-col items-center pt-16">
-      <div className="flex flex-col gap-4 max-w-xl p-4 border rounded-md bg-bg3">
-        <h1 className="font-bold text-2xl">LiveKit Embed Starter</h1>
+      <div className="bg-bg3 flex max-w-xl flex-col gap-4 rounded-md border p-4">
+        <h1 className="text-2xl font-bold">LiveKit Embed Starter</h1>
         <p>
-          The embed starter example contains an example implementation of an embeddable LiveKit control
-          that can be added to a web app to talk to your agent, no custom javascript code required.
+          The embed starter example contains an example implementation of an embeddable LiveKit
+          control that can be added to a web app to talk to your agent, no custom javascript code
+          required.
         </p>
 
-        <h2 className="font-bold text-lg">Example</h2>
-        <iframe
-          src={embedUrl}
-          style={{ width: 320, height: 64 }}
-        />
+        <h2 className="text-lg font-bold">Example</h2>
+        <iframe src={embedUrl} style={{ width: 320, height: 64 }} />
 
         <EmbedFixedAgentClient
           appConfig={APP_CONFIG_DEFAULTS}

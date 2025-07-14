@@ -1,4 +1,5 @@
-"use client";
-import dynamic from "next/dynamic";
+'use client';
 
-export default dynamic(() => import("./welcome"), { ssr: false });
+import dynamic from 'next/dynamic';
+
+export default dynamic(() => import('./welcome'), { ssr: false });

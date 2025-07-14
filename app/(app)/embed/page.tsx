@@ -9,7 +9,5 @@ export default async function Embed() {
   // FIXME: what is this appConfig thing used for? Do I need it for the embed?
   const appConfig = await getAppConfig(origin);
 
-  return (
-    <EmbedAgentClient appConfig={appConfig} />
-  );
+  return <EmbedAgentClient appConfig={appConfig} />;
 }
