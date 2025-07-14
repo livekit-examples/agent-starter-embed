@@ -1,24 +1,22 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { motion } from 'motion/react';
 import { Track } from 'livekit-client';
+import { motion } from 'motion/react';
 import {
   type AgentState,
+  BarVisualizer,
   useRoomContext,
   useVoiceAssistant,
-  BarVisualizer,
 } from '@livekit/components-react';
 import { PhoneDisconnectIcon } from '@phosphor-icons/react/dist/ssr';
-
 import { toastAlert } from '@/components/alert-toast';
-import { Button } from '@/components/ui/button';
 import { DeviceSelect } from '@/components/livekit/device-select';
 import { TrackToggle } from '@/components/livekit/track-toggle';
+import { Button } from '@/components/ui/button';
 import { useDebugMode } from '@/hooks/useDebug';
 import type { AppConfig } from '@/lib/types';
 import { cn } from '@/lib/utils';
-
 import { useAgentControlBar } from './hooks/use-agent-control-bar';
 
 function isAgentAvailable(agentState: AgentState) {
@@ -48,7 +46,7 @@ export const SessionView = ({
     handleDisconnect,
   } = useAgentControlBar({
     controls: { microphone: true },
-    saveUserChoices: true
+    saveUserChoices: true,
   });
 
   const onLeave = () => {
@@ -105,11 +103,8 @@ export const SessionView = ({
         }}
         transition={{ duration: 0.3, delay: sessionStarted ? 0.5 : 0, ease: 'easeOut' }}
       >
-        <div
-          aria-label="Voice assistant controls"
-          className="absolute inset-0"
-        >
-          <div className="flex flex-row items-center justify-between h-full gap-1 px-3">
+        <div aria-label="Voice assistant controls" className="absolute inset-0">
+          <div className="flex h-full flex-row items-center justify-between gap-1 px-3">
             <div className="flex gap-1">
               {visibleControls.microphone ? (
                 <div className="flex items-center gap-0">
@@ -159,7 +154,7 @@ export const SessionView = ({
             </div>
 
             {appConfig.isPreConnectBufferEnabled ? (
-              <div className="absolute left-1/2 -translate-x-1/2 h-full flex justify-center items-center gap-2">
+              <div className="absolute left-1/2 flex h-full -translate-x-1/2 items-center justify-center gap-2">
                 <BarVisualizer
                   barCount={3}
                   trackRef={agentAudioTrack}
@@ -184,8 +179,8 @@ export const SessionView = ({
             {visibleControls.leave ? (
               <Button variant="destructive" onClick={onLeave} className="font-mono">
                 <PhoneDisconnectIcon weight="bold" />
-                <span className="hidden md:inline uppercase">End Call</span>
-                <span className="inline md:hidden uppercase">End</span>
+                <span className="hidden uppercase md:inline">End Call</span>
+                <span className="inline uppercase md:hidden">End</span>
               </Button>
             ) : null}
           </div>

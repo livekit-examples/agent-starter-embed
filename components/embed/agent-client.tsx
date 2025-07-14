@@ -5,9 +5,9 @@ import { Room, RoomEvent } from 'livekit-client';
 import { motion } from 'motion/react';
 import { RoomAudioRenderer, RoomContext, StartAudio } from '@livekit/components-react';
 import { toastAlert } from '@/components/alert-toast';
-import { Toaster } from '@/components/ui/sonner';
-import { WelcomeView } from '@/components/embed/welcome-view';
 import { SessionView } from '@/components/embed/session-view';
+import { WelcomeView } from '@/components/embed/welcome-view';
+import { Toaster } from '@/components/ui/sonner';
 import useConnectionDetails from '@/hooks/useConnectionDetails';
 import type { AppConfig } from '@/lib/types';
 
@@ -75,7 +75,7 @@ function EmbedAgentClient({ appConfig }: AppProps) {
   }, [room, sessionStarted, connectionDetails, appConfig.isPreConnectBufferEnabled]);
 
   return (
-    <div className="relative h-16 bg-background rounded-[31px] border px-3 h-16 drop-shadow-md/3">
+    <div className="bg-background relative h-16 rounded-[31px] border px-3 drop-shadow-md/3">
       <MotionWelcomeView
         key="welcome"
         onStartCall={() => setSessionStarted(true)}
