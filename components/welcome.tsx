@@ -50,27 +50,6 @@ export default function Welcome() {
       </div>
 
       <Script src="/embed-fixed.js" strategy="lazyOnload" />
-
-      {/* {/* <Test /> */}
-      {/* <iframe */}
-      {/*   src="/embed-fixed" */}
-      {/*   style={{ position: 'fixed', bottom: 0, right: 0, height: 544 }} */}
-      {/* /> */}
     </div>
-  );
-}
-
-function Test() {
-  const [appConfig, setAppConfig] = useState<AppConfig | null>(null);
-  useEffect(() => {
-    getAppConfig(window.location.origin).then(setAppConfig);
-  }, []);
-
-  if (!appConfig) {
-    return null;
-  }
-
-  return (
-    <EmbedFixedAgentClient appConfig={appConfig} />
   );
 }
