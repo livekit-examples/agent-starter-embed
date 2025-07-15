@@ -13,7 +13,7 @@ import { PhoneDisconnectIcon } from '@phosphor-icons/react/dist/ssr';
 
 import { toastAlert } from '@/components/alert-toast';
 import { Button } from '@/components/ui/button';
-import { useAgentControlBar } from '@/components/livekit/agent-control-bar/hooks/use-agent-control-bar';
+import { useAgentControlBar } from '@/hooks/use-agent-control-bar';
 import { DeviceSelect } from '@/components/livekit/device-select';
 import { TrackToggle } from '@/components/livekit/track-toggle';
 import { useDebugMode } from '@/hooks/useDebug';

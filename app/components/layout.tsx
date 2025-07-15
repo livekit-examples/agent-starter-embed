@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { Room } from 'livekit-client';
 import { RoomContext } from '@livekit/components-react';
 import { toastAlert } from '@/components/alert-toast';
-import useConnectionDetails from '@/hooks/useConnectionDetails';
+import useConnectionDetails from '@/hooks/use-connection-details';
 import { cn } from '@/lib/utils';
 
 export default function ComponentsLayout({ children }: { children: React.ReactNode }) {

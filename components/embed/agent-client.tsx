@@ -8,7 +8,7 @@ import { toastAlert } from '@/components/alert-toast';
 import { SessionView } from '@/components/embed/session-view';
 import { WelcomeView } from '@/components/embed/welcome-view';
 import { Toaster } from '@/components/ui/sonner';
-import useConnectionDetails from '@/hooks/useConnectionDetails';
+import useConnectionDetails from '@/hooks/use-connection-details';
 import type { AppConfig } from '@/lib/types';
 
 const MotionWelcomeView = motion.create(WelcomeView);

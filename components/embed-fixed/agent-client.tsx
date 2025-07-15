@@ -6,7 +6,7 @@ import { motion } from 'motion/react';
 import { RoomAudioRenderer, RoomContext, StartAudio } from '@livekit/components-react';
 import { toastAlert } from '@/components/alert-toast';
 import { PopupView } from '@/components/embed-fixed/popup-view';
-import useConnectionDetails from '@/hooks/useConnectionDetails';
+import useConnectionDetails from '@/hooks/use-connection-details';
 import type { AppConfig } from '@/lib/types';
 
 import { Button } from '@/components/ui/button';
