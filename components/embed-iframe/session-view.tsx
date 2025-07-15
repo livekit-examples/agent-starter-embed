@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/button';
 import { useAgentControlBar } from '@/hooks/use-agent-control-bar';
 import { useDebugMode } from '@/hooks/useDebug';
 import type { AppConfig } from '@/lib/types';
+import { EmbedErrorDetails } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
 function isAgentAvailable(agentState: AgentState) {
@@ -27,12 +28,14 @@ type SessionViewProps = {
   appConfig: AppConfig;
   disabled: boolean;
   sessionStarted: boolean;
+  onDisplayError: (newError: EmbedErrorDetails) => void;
 };
 
 export const SessionView = ({
   appConfig,
   disabled,
   sessionStarted,
+  onDisplayError,
   ref,
 }: React.ComponentProps<'div'> & SessionViewProps) => {
   const room = useRoomContext();
@@ -69,7 +72,7 @@ export const SessionView = ({
             ? 'Agent did not join the room. '
             : 'Agent connected but did not complete initializing. ';
 
-        toastAlert({
+        onDisplayError({
           title: 'Session ended',
           description: (
             <p className="w-full">
@@ -91,7 +94,7 @@ export const SessionView = ({
     }, 10_000);
 
     return () => clearTimeout(timeout);
-  }, [agentState, sessionStarted, room]);
+  }, [agentState, sessionStarted, room, onDisplayError]);
 
   return (
     <div ref={ref} inert={disabled}>

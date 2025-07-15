@@ -4,10 +4,10 @@ import { useEffect, useMemo, useState } from 'react';
 import { Room, RoomEvent } from 'livekit-client';
 import { motion } from 'motion/react';
 import { RoomAudioRenderer, RoomContext, StartAudio } from '@livekit/components-react';
-import { toastAlert } from '@/components/alert-toast';
-import { Toaster } from '@/components/ui/sonner';
+import { XIcon } from '@phosphor-icons/react';
 import useConnectionDetails from '@/hooks/use-connection-details';
-import type { AppConfig } from '@/lib/types';
+import type { AppConfig, EmbedErrorDetails } from '@/lib/types';
+import { Button } from '../ui/button';
 import { SessionView } from './session-view';
 import { WelcomeView } from './welcome-view';
 
@@ -23,13 +23,15 @@ function EmbedAgentClient({ appConfig }: AppProps) {
   const [sessionStarted, setSessionStarted] = useState(false);
   const { connectionDetails, refreshConnectionDetails } = useConnectionDetails();
 
+  const [currentError, setCurrentError] = useState<EmbedErrorDetails | null>(null);
+
   useEffect(() => {
     const onDisconnected = () => {
       setSessionStarted(false);
       refreshConnectionDetails();
     };
     const onMediaDevicesError = (error: Error) => {
-      toastAlert({
+      setCurrentError({
         title: 'Encountered an error with your media devices',
         description: `${error.name}: ${error.message}`,
       });
@@ -62,7 +64,7 @@ function EmbedAgentClient({ appConfig }: AppProps) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         console.error('Error connecting to agent:', error);
-        toastAlert({
+        setCurrentError({
           title: 'There was an error connecting to the agent',
           description: `${error.name}: ${error.message}`,
         });
@@ -82,9 +84,40 @@ function EmbedAgentClient({ appConfig }: AppProps) {
         onStartCall={() => setSessionStarted(true)}
         disabled={sessionStarted}
         initial={{ opacity: 1 }}
-        animate={{ opacity: sessionStarted ? 0 : 1 }}
-        transition={{ duration: 0.25, ease: 'linear', delay: sessionStarted ? 0 : 0.5 }}
+        animate={{
+          opacity: !sessionStarted && currentError === null ? 1 : 0,
+          pointerEvents: !sessionStarted && currentError === null ? 'auto' : 'none',
+        }}
+        transition={{
+          duration: 0.25,
+          ease: 'linear',
+          delay: !sessionStarted && currentError === null ? 0.5 : 0,
+        }}
       />
+
+      <motion.div
+        className="h-full w-full"
+        animate={{
+          opacity: currentError !== null ? 1 : 0,
+          pointerEvents: currentError !== null ? 'auto' : 'none',
+        }}
+      >
+        <div className="flex h-full items-center justify-between gap-1 gap-4 pl-3">
+          <div className="pl-3">
+            <img src="/lk-logo.svg" alt="LiveKit Logo" className="block size-6 dark:hidden" />
+            <img src="/lk-logo-dark.svg" alt="LiveKit Logo" className="hidden size-6 dark:block" />
+          </div>
+
+          <div className="flex flex-col justify-center">
+            <span className="text-sm font-medium">{currentError?.title}</span>
+            <span className="text-xs">{currentError?.description}</span>
+          </div>
+
+          <Button size="icon" onClick={() => setCurrentError(null)}>
+            <XIcon />
+          </Button>
+        </div>
+      </motion.div>
 
       <RoomContext.Provider value={room}>
         <RoomAudioRenderer />
@@ -97,17 +130,19 @@ function EmbedAgentClient({ appConfig }: AppProps) {
           appConfig={appConfig}
           disabled={!sessionStarted}
           sessionStarted={sessionStarted}
+          onDisplayError={setCurrentError}
           initial={{ opacity: 0 }}
-          animate={{ opacity: sessionStarted ? 1 : 0 }}
+          animate={{
+            opacity: sessionStarted && currentError === null ? 1 : 0,
+            pointerEvents: sessionStarted && currentError === null ? 'auto' : 'none',
+          }}
           transition={{
             duration: 0.5,
             ease: 'linear',
-            delay: sessionStarted ? 0.25 : 0,
+            delay: sessionStarted && currentError === null ? 0.25 : 0,
           }}
         />
       </RoomContext.Provider>
-
-      <Toaster />
     </div>
   );
 }

@@ -31,3 +31,5 @@ export interface SandboxConfig {
     | { type: 'boolean'; value: boolean }
     | null;
 }
+
+export type EmbedErrorDetails = { title: React.ReactNode; description: React.ReactNode };
