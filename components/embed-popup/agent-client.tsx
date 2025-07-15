@@ -4,14 +4,12 @@ import { useEffect, useMemo, useState } from 'react';
 import { Room, RoomEvent } from 'livekit-client';
 import { motion } from 'motion/react';
 import { RoomAudioRenderer, RoomContext, StartAudio } from '@livekit/components-react';
-import { CaretDownIcon } from '@phosphor-icons/react';
-import { toastAlert } from '@/components/alert-toast';
+import { CaretDownIcon, XIcon } from '@phosphor-icons/react';
 import { PopupView } from '@/components/embed-popup/popup-view';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Toaster } from '@/components/ui/sonner';
 import useConnectionDetails from '@/hooks/use-connection-details';
-import type { AppConfig } from '@/lib/types';
+import { type AppConfig, EmbedErrorDetails } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
 export type EmbedFixedAgentClientProps = {
@@ -31,13 +29,15 @@ function EmbedFixedAgentClient({
   const room = useMemo(() => new Room(), []);
   const { connectionDetails, refreshConnectionDetails } = useConnectionDetails();
 
+  const [currentError, setCurrentError] = useState<EmbedErrorDetails | null>(null);
+
   useEffect(() => {
     const onDisconnected = () => {
       setPopupOpen(false);
       refreshConnectionDetails();
     };
     const onMediaDevicesError = (error: Error) => {
-      toastAlert({
+      setCurrentError({
         title: 'Encountered an error with your media devices',
         description: `${error.name}: ${error.message}`,
       });
@@ -70,7 +70,7 @@ function EmbedFixedAgentClient({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         console.error('Error connecting to agent:', error);
-        toastAlert({
+        setCurrentError({
           title: 'There was an error connecting to the agent',
           description: `${error.name}: ${error.message}`,
         });
@@ -82,8 +82,6 @@ function EmbedFixedAgentClient({
       room.disconnect();
     };
   }, [room, popupOpen, connectionDetails, appConfig.isPreConnectBufferEnabled]);
-
-  // onStartCall={() => setPopupOpen(true)}
 
   const triggerButton = (
     <Button
@@ -105,21 +103,53 @@ function EmbedFixedAgentClient({
   );
 
   const popupContents = (
-    <>
+    <div className="relative h-full w-full">
+      <motion.div
+        className="absolute inset-0 flex h-full w-full flex-col items-center justify-center gap-5"
+        animate={{
+          opacity: currentError !== null ? 1 : 0,
+          pointerEvents: currentError !== null ? 'auto' : 'none',
+        }}
+      >
+        <div className="pl-3">
+          <img src="/lk-logo.svg" alt="LiveKit Logo" className="block size-6 dark:hidden" />
+          <img src="/lk-logo-dark.svg" alt="LiveKit Logo" className="hidden size-6 dark:block" />
+        </div>
+
+        <div className="flex flex-col justify-center gap-1">
+          <span className="text-sm font-medium">{currentError?.title}</span>
+          <span className="text-xs">{currentError?.description}</span>
+        </div>
+
+        <Button onClick={() => setCurrentError(null)}>
+          <XIcon /> Close
+        </Button>
+      </motion.div>
+
       <RoomContext.Provider value={room}>
         <RoomAudioRenderer />
         <StartAudio label="Start Audio" />
 
         {/* --- */}
 
-        <PopupView
-          key="popup-view"
-          appConfig={appConfig}
-          disabled={!popupOpen}
-          sessionStarted={popupOpen}
-        />
+        <motion.div
+          className="absolute inset-0"
+          initial={false}
+          animate={{
+            opacity: currentError === null ? 1 : 0,
+            pointerEvents: currentError === null ? 'auto' : 'none',
+          }}
+        >
+          <PopupView
+            key="popup-view"
+            appConfig={appConfig}
+            disabled={!popupOpen}
+            sessionStarted={popupOpen}
+            onDisplayError={setCurrentError}
+          />
+        </motion.div>
       </RoomContext.Provider>
-    </>
+    </div>
   );
 
   switch (buttonPosition) {
@@ -142,22 +172,24 @@ function EmbedFixedAgentClient({
           >
             {popupContents}
           </motion.div>
-
-          <Toaster />
         </>
       );
     case 'static':
       return (
-        <>
-          <Popover open={popupOpen} onOpenChange={setPopupOpen}>
-            <PopoverTrigger asChild>{triggerButton}</PopoverTrigger>
-            <PopoverContent className="bg-bg2 h-[480px] w-[360px] p-0" align="end">
-              {popupContents}
-            </PopoverContent>
-          </Popover>
-
-          <Toaster />
-        </>
+        <Popover
+          open={currentError !== null ? true : popupOpen}
+          onOpenChange={(newOpen) => {
+            setPopupOpen(newOpen);
+            if (!newOpen) {
+              setCurrentError(null);
+            }
+          }}
+        >
+          <PopoverTrigger asChild>{triggerButton}</PopoverTrigger>
+          <PopoverContent className="bg-bg2 h-[480px] w-[360px] p-0" align="end">
+            {popupContents}
+          </PopoverContent>
+        </Popover>
       );
   }
 }

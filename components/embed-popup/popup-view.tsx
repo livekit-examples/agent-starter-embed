@@ -18,7 +18,7 @@ import { Button } from '@/components/ui/button';
 import { useAgentControlBar } from '@/hooks/use-agent-control-bar';
 import useChatAndTranscription from '@/hooks/use-chat-and-transcription';
 import { useDebugMode } from '@/hooks/useDebug';
-import type { AppConfig } from '@/lib/types';
+import type { AppConfig, EmbedErrorDetails } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { ChatInput } from '../livekit/chat/chat-input';
 
@@ -30,12 +30,14 @@ type SessionViewProps = {
   appConfig: AppConfig;
   disabled: boolean;
   sessionStarted: boolean;
+  onDisplayError: (err: EmbedErrorDetails) => void;
 };
 
 export const PopupView = ({
   appConfig,
   disabled,
   sessionStarted,
+  onDisplayError,
   ref,
 }: React.ComponentProps<'div'> & SessionViewProps) => {
   const room = useRoomContext();
@@ -77,7 +79,7 @@ export const PopupView = ({
             ? 'Agent did not join the room. '
             : 'Agent connected but did not complete initializing. ';
 
-        toastAlert({
+        onDisplayError({
           title: 'Session ended',
           description: (
             <p className="w-full">
@@ -118,7 +120,6 @@ export const PopupView = ({
             pointerEvents: agentState === 'connecting' ? 'auto' : 'none',
           }}
         >
-          <span className="text-fg1 text-sm font-medium select-none">Connecting...</span>
           <BarVisualizer
             barCount={5}
             state={agentState}
