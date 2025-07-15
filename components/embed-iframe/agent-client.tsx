@@ -5,11 +5,12 @@ import { Room, RoomEvent } from 'livekit-client';
 import { motion } from 'motion/react';
 import { RoomAudioRenderer, RoomContext, StartAudio } from '@livekit/components-react';
 import { toastAlert } from '@/components/alert-toast';
-import { SessionView } from '@/components/embed/session-view';
-import { WelcomeView } from '@/components/embed/welcome-view';
 import { Toaster } from '@/components/ui/sonner';
 import useConnectionDetails from '@/hooks/use-connection-details';
 import type { AppConfig } from '@/lib/types';
+
+import { SessionView } from './session-view';
+import { WelcomeView } from './welcome-view';
 
 const MotionWelcomeView = motion.create(WelcomeView);
 const MotionSessionView = motion.create(SessionView);

@@ -5,7 +5,7 @@ import { Room, RoomEvent } from 'livekit-client';
 import { motion } from 'motion/react';
 import { RoomAudioRenderer, RoomContext, StartAudio } from '@livekit/components-react';
 import { toastAlert } from '@/components/alert-toast';
-import { PopupView } from '@/components/embed-fixed/popup-view';
+import { PopupView } from '@/components/embed-popup/popup-view';
 import useConnectionDetails from '@/hooks/use-connection-details';
 import type { AppConfig } from '@/lib/types';
 
@@ -21,6 +21,9 @@ import { cn } from '@/lib/utils';
 
 export type EmbedFixedAgentClientProps = {
   appConfig: AppConfig;
+
+  // Choose whether to render the botton fixed in the lower right (the default)
+  // or just render it statically. The latter option exists largely for the welcome demo.
   buttonPosition?: 'fixed' | 'static';
 };
 
@@ -85,21 +88,20 @@ function EmbedFixedAgentClient({ appConfig, buttonPosition='fixed' }: EmbedFixed
 
   const triggerButton = (
     <Button
-      variant="outline"
+      variant="primary"
       size="lg"
       className={cn("w-12 h-12 p-0", {
         "fixed bottom-4 right-4": buttonPosition === 'fixed',
       })}
       onClick={() => popupOpen ? setPopupOpen(false) : setPopupOpen(true)}
     >
-      {popupOpen ? (
-        <CaretDownIcon size={24} />
-      ) : (
-        <>
-          <img src="/lk-logo.svg" alt="LiveKit Logo" className="block size-4 dark:hidden" />
-          <img src="/lk-logo-dark.svg" alt="LiveKit Logo" className="hidden size-4 dark:block" />
-        </>
-      )}
+      <div className="flex items-center justify-center bg-background w-10 h-10 rounded-full">
+        {popupOpen ? (
+          <CaretDownIcon size={24} className="text-fg1" />
+        ) : (
+          <img src="/lk-logo-dark.svg" alt="LiveKit Logo" className="size-4" />
+        )}
+      </div>
     </Button>
   );
 

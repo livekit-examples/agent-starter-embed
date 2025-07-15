@@ -42,4 +42,4 @@ yarn-error.log*
 next-env.d.ts
 
 # embed fixed build output
-public/embed-fixed.*
+public/embed-popup.*

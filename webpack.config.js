@@ -3,10 +3,10 @@ const path = require('path');
 const Dotenv = require('dotenv-webpack');
 
 module.exports = {
-  entry: './components/embed-fixed/standalone-bundle-root.tsx', // Input file
+  entry: './components/embed-popup/standalone-bundle-root.tsx', // Input file
   output: {
     path: path.resolve(__dirname, 'public'),
-    filename: 'embed-fixed.js', // Output file
+    filename: 'embed-popup.js', // Output file
   },
   devtool: 'source-map', // Equivalent to sourcemap: true
   resolve: {

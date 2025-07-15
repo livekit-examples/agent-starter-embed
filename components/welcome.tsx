@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 
-import EmbedFixedAgentClient from "./embed-fixed/agent-client";
+import EmbedPopupAgentClient from "./embed-popup/agent-client";
 import Script from "next/script";
 import { APP_CONFIG_DEFAULTS } from "@/app-config";
 import { Button } from "./ui/button";
@@ -14,8 +14,8 @@ export default function Welcome() {
     return url.toString();
   }, []);
 
-  const fixedEmbedUrl = useMemo(() => {
-    const url = new URL('/embed-fixed.js', window.location.origin);
+  const embedPopupUrl = useMemo(() => {
+    const url = new URL('/embed-popup.js', window.location.origin);
     return url.toString();
   }, []);
 
@@ -60,7 +60,7 @@ export default function Welcome() {
             <ArrowRightIcon size={16} className="text-primary" />
           </div>
           <div className="absolute bottom-4 right-4">
-            <EmbedFixedAgentClient
+            <EmbedPopupAgentClient
               appConfig={APP_CONFIG_DEFAULTS}
               buttonPosition="static"
             />
@@ -76,10 +76,10 @@ export default function Welcome() {
             onClick={activateGlobalPopup}
           >click here</Button>.
           {appendScript ? (
-            <div className="inline-flex flex-row gap-1 items-center text-green-400 ml-3">
+            <span className="inline-flex flex-row gap-1 items-center text-green-400 ml-3">
               <CheckIcon size={12} />
               <span className="text-sm">Added script tag to body, give it a try!</span>
-            </div>
+            </span>
           ) : null}
         </p>
 
@@ -88,12 +88,12 @@ export default function Welcome() {
           bottom of the <code>&lt;body&gt;</code> tag:
         </p>
         <pre className="overflow-auto">
-          {`<script src="${fixedEmbedUrl}"></script>`}
+          {`<script src="${embedPopupUrl}"></script>`}
         </pre>
       </div>
 
       {appendScript ? (
-        <Script src="/embed-fixed.js" strategy="lazyOnload" />
+        <Script src={embedPopupUrl} strategy="lazyOnload" />
       ) : null}
     </div>
   );

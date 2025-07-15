@@ -1,5 +1,5 @@
 import { headers } from 'next/headers';
-import EmbedAgentClient from '@/components/embed/agent-client';
+import EmbedAgentClient from '@/components/embed-iframe/agent-client';
 import { getAppConfig, getOrigin } from '@/lib/env';
 
 export default async function Embed() {
