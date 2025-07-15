@@ -1,7 +1,7 @@
 import { type ClassValue, clsx } from 'clsx';
 import { Room } from 'livekit-client';
 import { twMerge } from 'tailwind-merge';
-import { ReceivedChatMessage, TextStreamData } from '@livekit/components-react';
+import { type ReceivedChatMessage, type TextStreamData } from '@livekit/components-react';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

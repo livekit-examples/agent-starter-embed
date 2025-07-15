@@ -20,9 +20,11 @@ shadowRoot.appendChild(styleTag);
 const reactRoot = document.createElement('div');
 shadowRoot.appendChild(reactRoot);
 
-getAppConfig(window.location.origin).then((appConfig) => {
-  const root = ReactDOM.createRoot(reactRoot);
-  root.render(<EmbedFixedAgentClient appConfig={appConfig} />);
-}).catch(err => {
-  console.error('Error loading livekit embed-popup app config:', err);
-});
+getAppConfig(window.location.origin)
+  .then((appConfig) => {
+    const root = ReactDOM.createRoot(reactRoot);
+    root.render(<EmbedFixedAgentClient appConfig={appConfig} />);
+  })
+  .catch((err) => {
+    console.error('Error loading livekit embed-popup app config:', err);
+  });
