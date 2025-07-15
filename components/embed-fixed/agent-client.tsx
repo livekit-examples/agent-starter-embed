@@ -5,33 +5,37 @@ import { Room, RoomEvent } from 'livekit-client';
 import { motion } from 'motion/react';
 import { RoomAudioRenderer, RoomContext, StartAudio } from '@livekit/components-react';
 import { toastAlert } from '@/components/alert-toast';
-import { SessionView } from '@/components/embed/session-view';
+import { PopupView } from '@/components/embed-fixed/popup-view';
 import useConnectionDetails from '@/hooks/useConnectionDetails';
 import type { AppConfig } from '@/lib/types';
 
 import { Button } from '@/components/ui/button';
 import { Toaster } from '@/components/ui/sonner';
-import { CaretUpIcon } from '@phosphor-icons/react';
+import { CaretDownIcon } from '@phosphor-icons/react';
+import { cn } from '@/lib/utils';
 
-type FixedButtonViewProps = {
+type CornerButtonViewProps = {
   open: boolean;
+  position: 'fixed' | 'static';
   onOpen: () => void;
   onClose: () => void;
 };
 
-export const FixedButton = ({ open, onOpen, onClose }: FixedButtonViewProps) => {
+export const CornerButton = ({ open, position, onOpen, onClose }: CornerButtonViewProps) => {
   return (
     <div
-      className="fixed bottom-4 right-4"
+      className={cn({
+        "fixed bottom-4 right-4": position === 'fixed',
+      })}
       onClick={() => open ? onClose() : onOpen()}
     >
       <Button
-        variant="primary"
+        variant="outline"
         size="lg"
-        className="w-12 h-12 p-0 bg-bg3 border"
+        className="w-12 h-12 p-0"
       >
         {open ? (
-          <CaretUpIcon size={24} />
+          <CaretDownIcon size={24} />
         ) : (
           <>
             <img src="/lk-logo.svg" alt="LiveKit Logo" className="block size-4 dark:hidden" />
@@ -43,38 +47,12 @@ export const FixedButton = ({ open, onOpen, onClose }: FixedButtonViewProps) => 
   );
 };
 
-export const Backdrop = ({ onClose }: { onClose: () => void }) => {
-  return (
-    <div className="fixed inset-0" onClick={onClose} />
-  );
-}
-
-export const ManagedFixedButton = () => {
-  const [open, setOpen] = useState(false);
-
-  const onOpen = () => {
-    setOpen(true);
-    window.parent.postMessage(JSON.stringify({type: 'open'}));
-  };
-
-  const onClose = () => {
-    setOpen(false);
-    window.parent.postMessage(JSON.stringify({type: 'close'}));
-  };
-
-  return (
-    <>
-      <Backdrop onClose={onClose} />
-      <FixedButton open={open} onOpen={onOpen} onClose={onClose} />
-    </>
-  );
-};
-
 export type EmbedFixedAgentClientProps = {
   appConfig: AppConfig;
+  buttonPosition?: CornerButtonViewProps['position'];
 };
 
-function EmbedFixedAgentClient({ appConfig }: EmbedFixedAgentClientProps) {
+function EmbedFixedAgentClient({ appConfig, buttonPosition='fixed' }: EmbedFixedAgentClientProps) {
   const [popupOpen, setPopupOpen] = useState(false);
 
   const room = useMemo(() => new Room(), []);
@@ -136,17 +114,18 @@ function EmbedFixedAgentClient({ appConfig }: EmbedFixedAgentClientProps) {
     <>
       {/* Backdrop */}
       {popupOpen ? (
-        <Backdrop onClose={() => setPopupOpen(false)} />
+        <div className="fixed inset-0" onClick={() => setPopupOpen(false)} />
       ) : null}
 
-      <FixedButton
+      <CornerButton
+        position={buttonPosition}
         open={popupOpen}
         onOpen={() => setPopupOpen(true)}
         onClose={() => setPopupOpen(false)}
       />
 
       <motion.div
-        className="fixed right-4 bottom-20 w-full max-w-[320px] h-[480px] rounded-md bg-bg2"
+        className="fixed right-4 bottom-20 w-full max-w-[360px] h-[480px] rounded-md bg-bg2"
         initial={false}
         animate={{
           opacity: popupOpen ? 1 : 0,
@@ -160,8 +139,8 @@ function EmbedFixedAgentClient({ appConfig }: EmbedFixedAgentClientProps) {
 
           {/* --- */}
 
-          <SessionView
-            key="session-view"
+          <PopupView
+            key="popup-view"
             appConfig={appConfig}
             disabled={!popupOpen}
             sessionStarted={popupOpen}

@@ -1,5 +1,5 @@
 import { headers } from 'next/headers';
-import { getAppConfig, getOrigin } from '@/lib/utils';
+import { getAppConfig, getOrigin } from '@/lib/env';
 import EmbedFixedAgentClient from '@/components/embed-fixed/agent-client';
 
 export default async function EmbedFixed() {

@@ -4,8 +4,9 @@ import { useEffect, useMemo, useState } from "react";
 import { AppConfig } from "@/lib/types";
 
 import EmbedFixedAgentClient from "./embed-fixed/agent-client";
-import { getAppConfig } from "@/lib/utils";
+import { getAppConfig } from "@/lib/env";
 import Script from "next/script";
+import { APP_CONFIG_DEFAULTS } from "@/app-config";
 
 export default function Welcome() {
   const embedUrl = useMemo(() => {
@@ -40,6 +41,11 @@ export default function Welcome() {
           style={{ width: 320, height: 64 }}
         />
 
+        <EmbedFixedAgentClient
+          appConfig={APP_CONFIG_DEFAULTS}
+          buttonPosition="static"
+        />
+
         <h2 className="font-bold text-lg">Usage</h2>
         <p>
           To include the embed into a web app, paste the below embed HTML into the page:
@@ -49,7 +55,7 @@ export default function Welcome() {
         </pre>
       </div>
 
-      <Script src="/embed-fixed.js" strategy="lazyOnload" />
+      {/* <Script src="/embed-fixed.js" strategy="lazyOnload" /> */}
     </div>
   );
 }

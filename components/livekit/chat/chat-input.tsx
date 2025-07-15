@@ -21,7 +21,9 @@ export function ChatInput({ onSend, className, disabled, ...props }: ChatInputPr
   const isDisabled = disabled || message.trim().length === 0;
 
   useEffect(() => {
-    if (disabled) return;
+    if (disabled) {
+      return;
+    }
     // when not disabled refocus on input
     inputRef.current?.focus();
   }, [disabled]);
@@ -40,16 +42,16 @@ export function ChatInput({ onSend, className, disabled, ...props }: ChatInputPr
         disabled={disabled}
         placeholder="Type something..."
         onChange={(e) => setMessage(e.target.value)}
-        className="flex-1 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+        className="grow-1 shrink-1 w-0 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
       />
       <Button
         size="sm"
         type="submit"
         variant={isDisabled ? 'secondary' : 'primary'}
         disabled={isDisabled}
-        className="font-mono"
+        className="font-mono uppercase"
       >
-        SEND
+        Send
       </Button>
     </form>
   );

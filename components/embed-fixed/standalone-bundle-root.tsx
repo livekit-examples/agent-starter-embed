@@ -1,4 +1,5 @@
 import ReactDOM from 'react-dom/client';
+import * as React from 'react';
 import EmbedFixedAgentClient, { EmbedFixedAgentClientProps } from './agent-client';
 import { APP_CONFIG_DEFAULTS } from '@/app-config';
 

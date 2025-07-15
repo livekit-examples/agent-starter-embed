@@ -2,7 +2,7 @@ import { Public_Sans } from 'next/font/google';
 import localFont from 'next/font/local';
 import { headers } from 'next/headers';
 import { ApplyThemeScript, ThemeToggle } from '@/components/theme-toggle';
-import { getAppConfig, getOrigin } from '@/lib/utils';
+import { getAppConfig, getOrigin } from '@/lib/env';
 import './globals.css';
 
 const publicSans = Public_Sans({
