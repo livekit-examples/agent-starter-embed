@@ -11,45 +11,17 @@ import type { AppConfig } from '@/lib/types';
 
 import { Button } from '@/components/ui/button';
 import { Toaster } from '@/components/ui/sonner';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 import { CaretDownIcon } from '@phosphor-icons/react';
 import { cn } from '@/lib/utils';
 
-type CornerButtonViewProps = {
-  open: boolean;
-  position: 'fixed' | 'static';
-  onOpen: () => void;
-  onClose: () => void;
-};
-
-export const CornerButton = ({ open, position, onOpen, onClose }: CornerButtonViewProps) => {
-  return (
-    <div
-      className={cn({
-        "fixed bottom-4 right-4": position === 'fixed',
-      })}
-      onClick={() => open ? onClose() : onOpen()}
-    >
-      <Button
-        variant="outline"
-        size="lg"
-        className="w-12 h-12 p-0"
-      >
-        {open ? (
-          <CaretDownIcon size={24} />
-        ) : (
-          <>
-            <img src="/lk-logo.svg" alt="LiveKit Logo" className="block size-4 dark:hidden" />
-            <img src="/lk-logo-dark.svg" alt="LiveKit Logo" className="hidden size-4 dark:block" />
-          </>
-        )}
-      </Button>
-    </div>
-  );
-};
-
 export type EmbedFixedAgentClientProps = {
   appConfig: AppConfig;
-  buttonPosition?: CornerButtonViewProps['position'];
+  buttonPosition?: 'fixed' | 'static';
 };
 
 function EmbedFixedAgentClient({ appConfig, buttonPosition='fixed' }: EmbedFixedAgentClientProps) {
@@ -110,47 +82,83 @@ function EmbedFixedAgentClient({ appConfig, buttonPosition='fixed' }: EmbedFixed
   }, [room, popupOpen, connectionDetails, appConfig.isPreConnectBufferEnabled]);
 
   // onStartCall={() => setPopupOpen(true)}
-  return (
-    <>
-      {/* Backdrop */}
+
+  const triggerButton = (
+    <Button
+      variant="outline"
+      size="lg"
+      className={cn("w-12 h-12 p-0", {
+        "fixed bottom-4 right-4": buttonPosition === 'fixed',
+      })}
+      onClick={() => popupOpen ? setPopupOpen(false) : setPopupOpen(true)}
+    >
       {popupOpen ? (
-        <div className="fixed inset-0" onClick={() => setPopupOpen(false)} />
-      ) : null}
+        <CaretDownIcon size={24} />
+      ) : (
+        <>
+          <img src="/lk-logo.svg" alt="LiveKit Logo" className="block size-4 dark:hidden" />
+          <img src="/lk-logo-dark.svg" alt="LiveKit Logo" className="hidden size-4 dark:block" />
+        </>
+      )}
+    </Button>
+  );
 
-      <CornerButton
-        position={buttonPosition}
-        open={popupOpen}
-        onOpen={() => setPopupOpen(true)}
-        onClose={() => setPopupOpen(false)}
-      />
+  const popupContents = (
+    <>
+      <RoomContext.Provider value={room}>
+        <RoomAudioRenderer />
+        <StartAudio label="Start Audio" />
 
-      <motion.div
-        className="fixed right-4 bottom-20 w-full max-w-[360px] h-[480px] rounded-md bg-bg2"
-        initial={false}
-        animate={{
-          opacity: popupOpen ? 1 : 0,
-          translateY: popupOpen ? 0 : 8,
-          pointerEvents: popupOpen ? 'auto' : 'none',
-        }}
-      >
-        <RoomContext.Provider value={room}>
-          <RoomAudioRenderer />
-          <StartAudio label="Start Audio" />
+        {/* --- */}
 
-          {/* --- */}
+        <PopupView
+          key="popup-view"
+          appConfig={appConfig}
+          disabled={!popupOpen}
+          sessionStarted={popupOpen}
+        />
+      </RoomContext.Provider>
 
-          <PopupView
-            key="popup-view"
-            appConfig={appConfig}
-            disabled={!popupOpen}
-            sessionStarted={popupOpen}
-          />
-        </RoomContext.Provider>
-
-        <Toaster />
-      </motion.div>
+      <Toaster />
     </>
   );
+
+  switch (buttonPosition) {
+    case 'fixed':
+      return (
+        <>
+          {/* Backdrop */}
+          {popupOpen ? (
+            <div className="fixed inset-0" onClick={() => setPopupOpen(false)} />
+          ) : null}
+
+          {triggerButton}
+
+          <motion.div
+            className="fixed right-4 bottom-20 w-full max-w-[360px] h-[480px] rounded-md bg-bg2"
+            initial={false}
+            animate={{
+              opacity: popupOpen ? 1 : 0,
+              translateY: popupOpen ? 0 : 8,
+              pointerEvents: popupOpen ? 'auto' : 'none',
+            }}
+          >
+            {popupContents}
+          </motion.div>
+        </>
+      );
+    case 'static':
+      return (
+        <Popover open={popupOpen} onOpenChange={setPopupOpen}>
+          <PopoverTrigger asChild>
+            {triggerButton}
+          </PopoverTrigger>
+          <PopoverContent className="p-0 bg-bg2 w-[360px] h-[480px]" align="end">
+            {popupContents}
+          </PopoverContent>
+        </Popover>
+      );
+    }
 }
 
 export default EmbedFixedAgentClient;
