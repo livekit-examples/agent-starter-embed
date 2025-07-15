@@ -10,7 +10,6 @@ import {
   useVoiceAssistant,
 } from '@livekit/components-react';
 import { PhoneDisconnectIcon } from '@phosphor-icons/react/dist/ssr';
-import { toastAlert } from '@/components/alert-toast';
 import { ChatEntry } from '@/components/livekit/chat/chat-entry';
 import { DeviceSelect } from '@/components/livekit/device-select';
 import { TrackToggle } from '@/components/livekit/track-toggle';
