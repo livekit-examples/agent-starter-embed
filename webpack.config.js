@@ -10,7 +10,7 @@ module.exports = {
   },
   devtool: 'source-map', // Equivalent to sourcemap: true
   resolve: {
-    alias: { "@/*": path.resolve(__dirname, '*') },
+    alias: { '@/*': path.resolve(__dirname, '*') },
     extensions: ['.tsx', '.ts', '.js'], // Resolve TypeScript and JS files
   },
   plugins: [
@@ -33,7 +33,7 @@ module.exports = {
         test: /\.css$/i,
         use: ['css-loader', 'postcss-loader'],
         exclude: /node_modules/,
-      }
+      },
     ],
   },
   externals: {

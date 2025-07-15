@@ -1,3 +1,3 @@
-declare module "*.css" {
+declare module '*.css' {
   export = string;
 }

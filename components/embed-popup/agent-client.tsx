@@ -4,19 +4,14 @@ import { useEffect, useMemo, useState } from 'react';
 import { Room, RoomEvent } from 'livekit-client';
 import { motion } from 'motion/react';
 import { RoomAudioRenderer, RoomContext, StartAudio } from '@livekit/components-react';
+import { CaretDownIcon } from '@phosphor-icons/react';
 import { toastAlert } from '@/components/alert-toast';
 import { PopupView } from '@/components/embed-popup/popup-view';
+import { Button } from '@/components/ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Toaster } from '@/components/ui/sonner';
 import useConnectionDetails from '@/hooks/use-connection-details';
 import type { AppConfig } from '@/lib/types';
-
-import { Button } from '@/components/ui/button';
-import { Toaster } from '@/components/ui/sonner';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-import { CaretDownIcon } from '@phosphor-icons/react';
 import { cn } from '@/lib/utils';
 
 export type EmbedFixedAgentClientProps = {
@@ -27,7 +22,10 @@ export type EmbedFixedAgentClientProps = {
   buttonPosition?: 'fixed' | 'static';
 };
 
-function EmbedFixedAgentClient({ appConfig, buttonPosition='fixed' }: EmbedFixedAgentClientProps) {
+function EmbedFixedAgentClient({
+  appConfig,
+  buttonPosition = 'fixed',
+}: EmbedFixedAgentClientProps) {
   const [popupOpen, setPopupOpen] = useState(false);
 
   const room = useMemo(() => new Room(), []);
@@ -90,12 +88,12 @@ function EmbedFixedAgentClient({ appConfig, buttonPosition='fixed' }: EmbedFixed
     <Button
       variant="primary"
       size="lg"
-      className={cn("w-12 h-12 p-0", {
-        "fixed bottom-4 right-4": buttonPosition === 'fixed',
+      className={cn('h-12 w-12 p-0', {
+        'fixed right-4 bottom-4': buttonPosition === 'fixed',
       })}
-      onClick={() => popupOpen ? setPopupOpen(false) : setPopupOpen(true)}
+      onClick={() => (popupOpen ? setPopupOpen(false) : setPopupOpen(true))}
     >
-      <div className="flex items-center justify-center bg-background w-10 h-10 rounded-full">
+      <div className="bg-background flex h-10 w-10 items-center justify-center rounded-full">
         {popupOpen ? (
           <CaretDownIcon size={24} className="text-fg1" />
         ) : (
@@ -130,14 +128,12 @@ function EmbedFixedAgentClient({ appConfig, buttonPosition='fixed' }: EmbedFixed
       return (
         <>
           {/* Backdrop */}
-          {popupOpen ? (
-            <div className="fixed inset-0" onClick={() => setPopupOpen(false)} />
-          ) : null}
+          {popupOpen ? <div className="fixed inset-0" onClick={() => setPopupOpen(false)} /> : null}
 
           {triggerButton}
 
           <motion.div
-            className="fixed right-4 bottom-20 w-full max-w-[360px] h-[480px] rounded-md bg-bg2"
+            className="bg-bg2 fixed right-4 bottom-20 h-[480px] w-full max-w-[360px] rounded-md"
             initial={false}
             animate={{
               opacity: popupOpen ? 1 : 0,
@@ -152,15 +148,13 @@ function EmbedFixedAgentClient({ appConfig, buttonPosition='fixed' }: EmbedFixed
     case 'static':
       return (
         <Popover open={popupOpen} onOpenChange={setPopupOpen}>
-          <PopoverTrigger asChild>
-            {triggerButton}
-          </PopoverTrigger>
-          <PopoverContent className="p-0 bg-bg2 w-[360px] h-[480px]" align="end">
+          <PopoverTrigger asChild>{triggerButton}</PopoverTrigger>
+          <PopoverContent className="bg-bg2 h-[480px] w-[360px] p-0" align="end">
             {popupContents}
           </PopoverContent>
         </Popover>
       );
-    }
+  }
 }
 
 export default EmbedFixedAgentClient;

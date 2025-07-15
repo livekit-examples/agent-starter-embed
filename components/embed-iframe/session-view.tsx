@@ -14,10 +14,10 @@ import { toastAlert } from '@/components/alert-toast';
 import { DeviceSelect } from '@/components/livekit/device-select';
 import { TrackToggle } from '@/components/livekit/track-toggle';
 import { Button } from '@/components/ui/button';
+import { useAgentControlBar } from '@/hooks/use-agent-control-bar';
 import { useDebugMode } from '@/hooks/useDebug';
 import type { AppConfig } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { useAgentControlBar } from '@/hooks/use-agent-control-bar';
 
 function isAgentAvailable(agentState: AgentState) {
   return agentState == 'listening' || agentState == 'thinking' || agentState == 'speaking';

@@ -1,26 +1,25 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
 import { Track } from 'livekit-client';
+import { AnimatePresence, motion } from 'motion/react';
 import {
   type AgentState,
+  BarVisualizer,
   useRoomContext,
   useVoiceAssistant,
-  BarVisualizer,
 } from '@livekit/components-react';
 import { PhoneDisconnectIcon } from '@phosphor-icons/react/dist/ssr';
-
 import { toastAlert } from '@/components/alert-toast';
-import { Button } from '@/components/ui/button';
-import { useAgentControlBar } from '@/hooks/use-agent-control-bar';
+import { ChatEntry } from '@/components/livekit/chat/chat-entry';
 import { DeviceSelect } from '@/components/livekit/device-select';
 import { TrackToggle } from '@/components/livekit/track-toggle';
+import { Button } from '@/components/ui/button';
+import { useAgentControlBar } from '@/hooks/use-agent-control-bar';
+import useChatAndTranscription from '@/hooks/use-chat-and-transcription';
 import { useDebugMode } from '@/hooks/useDebug';
 import type { AppConfig } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import useChatAndTranscription from '@/hooks/use-chat-and-transcription';
-import { ChatEntry } from '@/components/livekit/chat/chat-entry';
 import { ChatInput } from '../livekit/chat/chat-input';
 
 function isAgentAvailable(agentState: AgentState) {
@@ -50,7 +49,7 @@ export const PopupView = ({
     handleDisconnect,
   } = useAgentControlBar({
     controls: { microphone: true },
-    saveUserChoices: true
+    saveUserChoices: true,
   });
   const { messages, send } = useChatAndTranscription();
 
@@ -102,18 +101,17 @@ export const PopupView = ({
     return () => clearTimeout(timeout);
   }, [agentState, sessionStarted, room]);
 
-  const showAgentListening = (
-    appConfig.isPreConnectBufferEnabled && 
+  const showAgentListening =
+    appConfig.isPreConnectBufferEnabled &&
     agentState !== 'disconnected' &&
     agentState !== 'connecting' &&
-    agentState !== 'initializing'
-  );
+    agentState !== 'initializing';
 
   return (
-    <div ref={ref} inert={disabled} className="flex flex-col w-full h-full">
-      <div className="relative flex flex-col justify-end h-0 p-2 grow-1 shrink-1 overflow-y-auto">
+    <div ref={ref} inert={disabled} className="flex h-full w-full flex-col">
+      <div className="relative flex h-0 shrink-1 grow-1 flex-col justify-end overflow-y-auto p-2">
         <motion.div
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center"
+          className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center"
           initial={false}
           animate={{
             opacity: agentState === 'connecting' ? 1 : 0,
@@ -169,7 +167,7 @@ export const PopupView = ({
 
       <div
         aria-label="Voice assistant controls"
-        className="relative flex items-center gap-1 px-2 h-12 grow-0 shrink-0"
+        className="relative flex h-12 shrink-0 grow-0 items-center gap-1 px-2"
       >
         <motion.div
           initial={false}
@@ -177,7 +175,7 @@ export const PopupView = ({
             opacity: showAgentListening ? 1 : 0,
             pointerEvents: showAgentListening ? 'auto' : 'none',
           }}
-          className="absolute -top-8 right-2 flex justify-center items-center gap-2 bg-bg2 px-3 py-0.5 rounded-full"
+          className="bg-bg2 absolute -top-8 right-2 flex items-center justify-center gap-2 rounded-full px-3 py-0.5"
         >
           <BarVisualizer
             barCount={3}
@@ -245,7 +243,7 @@ export const PopupView = ({
           {/* FIXME: do I need to handle the other channels here? */}
         </div>
 
-        <ChatInput className="w-0 grow-1 shrink-1" onSend={onSend} />
+        <ChatInput className="w-0 shrink-1 grow-1" onSend={onSend} />
       </div>
     </div>
   );
