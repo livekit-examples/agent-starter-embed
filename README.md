@@ -23,6 +23,7 @@ Then run the app with:
 
 ```bash
 pnpm install
+pnpm build-embed-popup-script # Builds a script used by the popup embed
 pnpm dev
 ```
 

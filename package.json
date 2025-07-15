@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "build-embed-popup-script": "webpack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
