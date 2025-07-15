@@ -119,8 +119,6 @@ function EmbedFixedAgentClient({
           sessionStarted={popupOpen}
         />
       </RoomContext.Provider>
-
-      <Toaster />
     </>
   );
 
@@ -144,16 +142,22 @@ function EmbedFixedAgentClient({
           >
             {popupContents}
           </motion.div>
+
+          <Toaster />
         </>
       );
     case 'static':
       return (
-        <Popover open={popupOpen} onOpenChange={setPopupOpen}>
-          <PopoverTrigger asChild>{triggerButton}</PopoverTrigger>
-          <PopoverContent className="bg-bg2 h-[480px] w-[360px] p-0" align="end">
-            {popupContents}
-          </PopoverContent>
-        </Popover>
+        <>
+          <Popover open={popupOpen} onOpenChange={setPopupOpen}>
+            <PopoverTrigger asChild>{triggerButton}</PopoverTrigger>
+            <PopoverContent className="bg-bg2 h-[480px] w-[360px] p-0" align="end">
+              {popupContents}
+            </PopoverContent>
+          </Popover>
+
+          <Toaster />
+        </>
       );
   }
 }
