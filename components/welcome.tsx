@@ -61,7 +61,7 @@ export default function Welcome() {
         </div>
 
         <p className="text-sm">
-          Note: if you'd like to see what the popup style embed looks like in the context of this
+          Note: if you&apos;d like to see what the popup style embed looks like in the context of this
           page,{' '}
           <Button variant="link" className="px-0 normal-case" onClick={activateGlobalPopup}>
             click here
