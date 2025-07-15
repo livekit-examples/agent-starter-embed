@@ -26,7 +26,7 @@ export default function Welcome() {
   return (
     <div className="flex flex-col items-center py-16">
       <div className="bg-bg3 flex max-w-xl flex-col gap-4 rounded-md border p-4">
-        <h1 className="text-2xl font-bold">LiveKit Embed Starter</h1>
+        <h1 className="text-2xl font-bold">LiveKit Agent Embed Starter</h1>
         <p>
           The embed starter example contains an example implementation of an embeddable LiveKit
           control that can be added to a web app to talk to your agent, no custom javascript code

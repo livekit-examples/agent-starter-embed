@@ -1,6 +1,6 @@
 <img src="./.github/assets/app-icon.png" alt="Voice Assistant App Icon" width="100" height="100">
 
-# Embed Starter
+# Agent Embed Starter
 
 This is a starter template for [LiveKit Agents](https://docs.livekit.io/agents) that provides an example of how you might approach building a LiveKit web embed using the [LiveKit JavaScript SDK](https://github.com/livekit/client-sdk-js). It supports [voice](https://docs.livekit.io/agents/start/voice-ai) and [transcriptions](https://docs.livekit.io/agents/build/text/).
 
@@ -16,7 +16,7 @@ This template is built with Next.js and is free for you to use or modify as you 
 Run the following command to automatically clone this template.
 
 ```bash
-lk app create --template embed
+lk app create --template agent-embed
 ```
 
 Then run the app with:
