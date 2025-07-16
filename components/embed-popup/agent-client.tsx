@@ -116,7 +116,7 @@ function EmbedFixedAgentClient({
           <img src="/lk-logo-dark.svg" alt="LiveKit Logo" className="hidden size-6 dark:block" />
         </div>
 
-        <div className="flex flex-col justify-center gap-1">
+        <div className="flex w-full flex-col justify-center gap-1 overflow-auto px-4">
           <span className="text-sm font-medium">{currentError?.title}</span>
           <span className="text-xs">{currentError?.description}</span>
         </div>
