@@ -3,16 +3,22 @@
 import { useMemo, useState } from 'react';
 import { motion } from 'motion/react';
 import { APP_CONFIG_DEFAULTS } from '@/app-config';
+import { THEME_STORAGE_KEY } from '@/lib/env';
+import type { ThemeMode } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import EmbedPopupAgentClient from './embed-popup/agent-client';
+import { ThemeToggle } from './theme-toggle';
 
 export default function Welcome() {
+  const [, forceUpdate] = useState(0);
   const [selectedTab, setSelectedTab] = useState<'iframe' | 'popover'>('iframe');
+  const theme = (localStorage.getItem(THEME_STORAGE_KEY) as ThemeMode) ?? 'dark';
 
   const embedUrl = useMemo(() => {
     const url = new URL('/embed', window.location.origin);
+    url.searchParams.set('theme', theme);
     return url.toString();
-  }, []);
+  }, [theme]);
 
   const embedPopupUrl = useMemo(() => {
     const url = new URL('/embed-popup.js', window.location.origin);
@@ -27,6 +33,11 @@ export default function Welcome() {
           The embed agent starter example is a low-code solution to embed a LiveKit Agent into an
           existing website or web application.
         </p>
+
+        <div className="flex flex-row items-center gap-2" onClick={() => forceUpdate((c) => c + 1)}>
+          <div className="text-fg0 mb-1 font-semibold">Toggle theme:</div>
+          <ThemeToggle className="w-auto" />
+        </div>
 
         <div>
           <div className="text-fg0 mb-1 font-semibold">Select a variant:</div>
