@@ -96,7 +96,10 @@ function EmbedFixedAgentClient({
         {popupOpen ? (
           <CaretDownIcon size={24} className="text-fg1" />
         ) : (
-          <img src="/lk-logo-dark.svg" alt="LiveKit Logo" className="size-4" />
+          <>
+            <img src="/lk-logo.svg" alt="LiveKit Logo" className="size-4 dark:hidden" />
+            <img src="/lk-logo-dark.svg" alt="LiveKit Logo" className="hidden size-4 dark:block" />
+          </>
         )}
       </div>
     </Button>

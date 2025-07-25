@@ -4,14 +4,19 @@ import { useMemo, useState } from 'react';
 import Script from 'next/script';
 import { ArrowRightIcon, CheckIcon } from '@phosphor-icons/react';
 import { APP_CONFIG_DEFAULTS } from '@/app-config';
+import { THEME_STORAGE_KEY } from '@/lib/env';
+import type { ThemeMode } from '@/lib/types';
 import EmbedPopupAgentClient from './embed-popup/agent-client';
 import { Button } from './ui/button';
 
 export default function Welcome() {
+  const theme = (localStorage.getItem(THEME_STORAGE_KEY) as ThemeMode) ?? 'dark';
+
   const embedUrl = useMemo(() => {
     const url = new URL('/embed', window.location.origin);
+    url.searchParams.set('theme', theme);
     return url.toString();
-  }, []);
+  }, [theme]);
 
   const embedPopupUrl = useMemo(() => {
     const url = new URL('/embed-popup.js', window.location.origin);
