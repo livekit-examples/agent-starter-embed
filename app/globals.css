@@ -127,6 +127,7 @@
 }
 
 @theme inline {
+  --color-fg0: var(--fg0);
   --color-fg1: var(--fg1);
   --color-fg2: var(--fg2);
   --color-fg3: var(--fg3);
