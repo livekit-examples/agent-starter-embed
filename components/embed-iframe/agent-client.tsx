@@ -99,7 +99,7 @@ function EmbedAgentClient({ appConfig }: AppProps) {
   return (
     <>
       <script id="theme-script">{THEME_SCRIPT}</script>
-      <div className="bg-background relative h-16 rounded-[31px] border px-3 drop-shadow-md/3">
+      <div className="bg-background relative h-16 rounded-full border px-3">
         <MotionWelcomeView
           key="welcome"
           onStartCall={() => setSessionStarted(true)}

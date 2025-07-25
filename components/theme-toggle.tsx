@@ -41,15 +41,16 @@ function applyTheme(theme: ThemeMode) {
   }
 }
 
-interface ThemeToggleProps {
-  className?: string;
-}
-
 export function ApplyThemeScript() {
   return <script id="theme-script">{THEME_SCRIPT}</script>;
 }
 
-export function ThemeToggle({ className }: ThemeToggleProps) {
+interface ThemeToggleProps {
+  className?: string;
+  onClick?: () => void;
+}
+
+export function ThemeToggle({ className, onClick = () => {} }: ThemeToggleProps) {
   const [theme, setTheme] = useState<ThemeMode | undefined>(undefined);
 
   useEffect(() => {
@@ -61,6 +62,7 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
   function handleThemeChange(theme: ThemeMode) {
     applyTheme(theme);
     setTheme(theme);
+    onClick();
   }
 
   return (
