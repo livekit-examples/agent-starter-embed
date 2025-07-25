@@ -85,18 +85,21 @@ function EmbedFixedAgentClient({
 
   const triggerButton = (
     <Button
-      variant="primary"
       size="lg"
-      className={cn('h-12 w-12 p-0', {
-        'fixed right-4 bottom-4': buttonPosition === 'fixed',
-      })}
       onClick={() => (popupOpen ? setPopupOpen(false) : setPopupOpen(true))}
+      className={cn(
+        'border-separator2 hover:bg-bg3 focus:bg-bg3 h-12 w-12 border p-0 transition-colors duration-300 hover:border-[#1fd5f9]',
+        buttonPosition === 'fixed' && 'fixed right-4 bottom-4'
+      )}
     >
-      <div className="bg-background flex h-10 w-10 items-center justify-center rounded-full">
+      <div className="flex h-12 w-12 items-center justify-center rounded-full">
         {popupOpen ? (
           <CaretDownIcon size={24} className="text-fg1" />
         ) : (
-          <img src="/lk-logo-dark.svg" alt="LiveKit Logo" className="size-4" />
+          <>
+            <img src="/lk-logo.svg" alt="LiveKit Logo" className="size-4 dark:hidden" />
+            <img src="/lk-logo-dark.svg" alt="LiveKit Logo" className="hidden size-4 dark:block" />
+          </>
         )}
       </div>
     </Button>
@@ -116,13 +119,13 @@ function EmbedFixedAgentClient({
           <img src="/lk-logo-dark.svg" alt="LiveKit Logo" className="hidden size-6 dark:block" />
         </div>
 
-        <div className="flex w-full flex-col justify-center gap-1 overflow-auto px-4">
+        <div className="flex w-full flex-col justify-center gap-1 overflow-auto px-4 text-center">
           <span className="text-sm font-medium">{currentError?.title}</span>
           <span className="text-xs">{currentError?.description}</span>
         </div>
 
-        <Button onClick={() => setCurrentError(null)}>
-          <XIcon /> Close
+        <Button variant="secondary" onClick={() => setCurrentError(null)}>
+          <XIcon /> Dismiss
         </Button>
       </motion.div>
 
@@ -162,7 +165,7 @@ function EmbedFixedAgentClient({
           {triggerButton}
 
           <motion.div
-            className="bg-bg2 fixed right-4 bottom-20 h-[480px] w-full max-w-[360px] rounded-md"
+            className="bg-bg2 fixed right-4 bottom-20 h-[480px] w-full max-w-[360px] rounded-xl"
             initial={false}
             animate={{
               opacity: popupOpen ? 1 : 0,
@@ -186,7 +189,7 @@ function EmbedFixedAgentClient({
           }}
         >
           <PopoverTrigger asChild>{triggerButton}</PopoverTrigger>
-          <PopoverContent className="bg-bg2 h-[480px] w-[360px] p-0" align="end">
+          <PopoverContent className="bg-bg2 h-[480px] w-[360px] p-0" align="end" side="top">
             {popupContents}
           </PopoverContent>
         </Popover>
