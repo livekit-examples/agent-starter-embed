@@ -6,6 +6,7 @@ import { motion } from 'motion/react';
 import { RoomAudioRenderer, RoomContext, StartAudio } from '@livekit/components-react';
 import { XIcon } from '@phosphor-icons/react';
 import useConnectionDetails from '@/hooks/use-connection-details';
+import { THEME_MEDIA_QUERY } from '@/lib/env';
 import type { AppConfig, EmbedErrorDetails } from '@/lib/types';
 import { Button } from '../ui/button';
 import { SessionView } from './session-view';
@@ -13,6 +14,24 @@ import { WelcomeView } from './welcome-view';
 
 const MotionWelcomeView = motion.create(WelcomeView);
 const MotionSessionView = motion.create(SessionView);
+
+const THEME_SCRIPT = `
+  const doc = document.documentElement;
+  const theme = new URLSearchParams(window.location.search).get('theme') ?? 'dark';
+
+  if (theme === "system") {
+    if (window.matchMedia("${THEME_MEDIA_QUERY}").matches) {
+      doc.classList.add("dark");
+    } else {
+      doc.classList.add("light");
+    }
+  } else {
+    doc.classList.add(theme);
+  }
+`
+  .trim()
+  .replace(/\n/g, '')
+  .replace(/\s+/g, ' ');
 
 interface AppProps {
   appConfig: AppConfig;
@@ -78,72 +97,80 @@ function EmbedAgentClient({ appConfig }: AppProps) {
   }, [room, sessionStarted, connectionDetails, appConfig.isPreConnectBufferEnabled]);
 
   return (
-    <div className="bg-background relative h-16 rounded-[31px] border px-3 drop-shadow-md/3">
-      <MotionWelcomeView
-        key="welcome"
-        onStartCall={() => setSessionStarted(true)}
-        disabled={sessionStarted}
-        initial={{ opacity: 1 }}
-        animate={{
-          opacity: !sessionStarted && currentError === null ? 1 : 0,
-          pointerEvents: !sessionStarted && currentError === null ? 'auto' : 'none',
-        }}
-        transition={{
-          duration: 0.25,
-          ease: 'linear',
-          delay: !sessionStarted && currentError === null ? 0.5 : 0,
-        }}
-      />
-
-      <motion.div
-        className="h-full w-full"
-        animate={{
-          opacity: currentError !== null ? 1 : 0,
-          pointerEvents: currentError !== null ? 'auto' : 'none',
-        }}
-      >
-        <div className="flex h-full items-center justify-between gap-1 gap-4 pl-3">
-          <div className="pl-3">
-            <img src="/lk-logo.svg" alt="LiveKit Logo" className="block size-6 dark:hidden" />
-            <img src="/lk-logo-dark.svg" alt="LiveKit Logo" className="hidden size-6 dark:block" />
-          </div>
-
-          <div className="flex flex-col justify-center">
-            <span className="text-sm font-medium">{currentError?.title}</span>
-            <span className="text-xs">{currentError?.description}</span>
-          </div>
-
-          <Button size="icon" onClick={() => setCurrentError(null)}>
-            <XIcon />
-          </Button>
-        </div>
-      </motion.div>
-
-      <RoomContext.Provider value={room}>
-        <RoomAudioRenderer />
-        <StartAudio label="Start Audio" />
-
-        {/* --- */}
-
-        <MotionSessionView
-          key="session-view"
-          appConfig={appConfig}
-          disabled={!sessionStarted}
-          sessionStarted={sessionStarted}
-          onDisplayError={setCurrentError}
-          initial={{ opacity: 0 }}
+    <>
+      <script id="theme-script">{THEME_SCRIPT}</script>
+      <div className="bg-background relative h-16 rounded-[31px] border px-3 drop-shadow-md/3">
+        <MotionWelcomeView
+          key="welcome"
+          onStartCall={() => setSessionStarted(true)}
+          disabled={sessionStarted}
+          initial={{ opacity: 1 }}
           animate={{
-            opacity: sessionStarted && currentError === null ? 1 : 0,
-            pointerEvents: sessionStarted && currentError === null ? 'auto' : 'none',
+            opacity: !sessionStarted && currentError === null ? 1 : 0,
+            pointerEvents: !sessionStarted && currentError === null ? 'auto' : 'none',
           }}
           transition={{
-            duration: 0.5,
+            duration: 0.25,
             ease: 'linear',
-            delay: sessionStarted && currentError === null ? 0.25 : 0,
+            delay: !sessionStarted && currentError === null ? 0.5 : 0,
           }}
         />
-      </RoomContext.Provider>
-    </div>
+
+        <motion.div
+          initial={{ opacity: 0, pointerEvents: 'none' }}
+          animate={{
+            opacity: currentError !== null ? 1 : 0,
+            pointerEvents: currentError !== null ? 'auto' : 'none',
+          }}
+          className="h-full w-full"
+        >
+          <div className="flex h-full items-center justify-between gap-1 gap-4 pl-3">
+            <div className="pl-3">
+              <img src="/lk-logo.svg" alt="LiveKit Logo" className="block size-6 dark:hidden" />
+              <img
+                src="/lk-logo-dark.svg"
+                alt="LiveKit Logo"
+                className="hidden size-6 dark:block"
+              />
+            </div>
+
+            <div className="flex flex-col justify-center">
+              <span className="text-sm font-medium">{currentError?.title}</span>
+              <span className="text-xs">{currentError?.description}</span>
+            </div>
+
+            <Button size="icon" onClick={() => setCurrentError(null)}>
+              <XIcon />
+            </Button>
+          </div>
+        </motion.div>
+
+        <RoomContext.Provider value={room}>
+          <RoomAudioRenderer />
+          <StartAudio label="Start Audio" />
+
+          {/* --- */}
+
+          <MotionSessionView
+            key="session-view"
+            appConfig={appConfig}
+            disabled={!sessionStarted}
+            sessionStarted={sessionStarted}
+            onDisplayError={setCurrentError}
+            initial={{ opacity: 0 }}
+            animate={{
+              opacity: sessionStarted && currentError === null ? 1 : 0,
+              pointerEvents: sessionStarted && currentError === null ? 'auto' : 'none',
+            }}
+            transition={{
+              duration: 0.5,
+              ease: 'linear',
+              delay: sessionStarted && currentError === null ? 0.25 : 0,
+            }}
+          />
+        </RoomContext.Provider>
+      </div>
+    </>
   );
 }
 export default EmbedAgentClient;
