@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Track } from 'livekit-client';
 import { AnimatePresence, motion } from 'motion/react';
 import {
@@ -53,6 +53,15 @@ export const PopupView = ({
     saveUserChoices: true,
   });
   const { messages, send } = useChatAndTranscription();
+
+  // When new transcription messages are generated, automatically scroll to the bottom
+  const messageScrollWrapperRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (!messageScrollWrapperRef.current) {
+      return;
+    }
+    messageScrollWrapperRef.current.scrollTop = messageScrollWrapperRef.current.scrollHeight;
+  }, [messages]);
 
   const onLeave = () => {
     handleDisconnect();
@@ -110,50 +119,58 @@ export const PopupView = ({
 
   return (
     <div ref={ref} inert={disabled} className="flex h-full w-full flex-col">
-      <div className="relative flex h-0 shrink-1 grow-1 flex-col justify-end overflow-y-auto p-2">
+      <div className="relative h-0 shrink-1 grow-1">
         <motion.div
-          className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center"
+          layoutId="avatar"
           initial={false}
-          animate={{
-            opacity: agentState === 'connecting' ? 1 : 0,
-            pointerEvents: agentState === 'connecting' ? 'auto' : 'none',
-          }}
+          ref={messageScrollWrapperRef}
+          animate={{ opacity: agentHasAvatar ? 0 : 1 }}
+          className={cn("absolute inset-0 flex flex-col overflow-y-auto p-2", {"pointer-events-none": agentHasAvatar})}
         >
-          <BarVisualizer
-            barCount={5}
-            state={agentState}
-            options={{ minHeight: 5 }}
-            className={cn('flex aspect-video w-40 items-center justify-center gap-1')}
+          <motion.div
+            className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center"
+            initial={false}
+            animate={{
+              opacity: agentState === 'connecting' ? 1 : 0,
+              pointerEvents: agentState === 'connecting' ? 'auto' : 'none',
+            }}
           >
-            <span
-              className={cn([
-                'bg-muted min-h-4 w-4 rounded-full',
-                'origin-center transition-colors duration-250 ease-linear',
-                'data-[lk-highlighted=true]:bg-foreground data-[lk-muted=true]:bg-muted',
-              ])}
-            />
-          </BarVisualizer>
-        </motion.div>
-
-        {/* Add spacer at the top to ensure "end" always has room */}
-        <div className="mt-4" />
-
-        <AnimatePresence>
-          {messages.map((message) => (
-            <motion.div
-              key={message.id}
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 1, height: 'auto', translateY: 0.001 }}
-              transition={{ duration: 0.5, ease: 'easeOut' }}
+            <BarVisualizer
+              barCount={5}
+              state={agentState}
+              options={{ minHeight: 5 }}
+              className={cn('flex aspect-video w-40 items-center justify-center gap-1')}
             >
-              <ChatEntry hideName key={message.id} entry={message} />
-            </motion.div>
-          ))}
-        </AnimatePresence>
+              <span
+                className={cn([
+                  'bg-muted min-h-4 w-4 rounded-full',
+                  'origin-center transition-colors duration-250 ease-linear',
+                  'data-[lk-highlighted=true]:bg-foreground data-[lk-muted=true]:bg-muted',
+                ])}
+              />
+            </BarVisualizer>
+          </motion.div>
 
-        {/* Add spacer at the bottom to ensure "agent listening" always has room */}
-        <div className="mb-8" />
+          {/* Add spacer at the top to ensure "end" always has room */}
+          <div className="mt-auto" />
+
+          <AnimatePresence>
+            {messages.map((message) => (
+              <motion.div
+                key={message.id}
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 1, height: 'auto', translateY: 0.001 }}
+                transition={{ duration: 0.5, ease: 'easeOut' }}
+              >
+                <ChatEntry hideName key={message.id} entry={message} />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+
+          {/* Add spacer at the bottom to ensure "agent listening" always has room */}
+          <div className="mb-8" />
+        </motion.div>
       </div>
 
       {visibleControls.leave ? (
