@@ -11,6 +11,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import useConnectionDetails from '@/hooks/use-connection-details';
 import { type AppConfig, EmbedErrorDetails } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import { ConnectionDetails } from '@/app/api/connection-details/route';
 
 export type EmbedFixedAgentClientProps = {
   appConfig: AppConfig;
@@ -50,8 +51,6 @@ function EmbedFixedAgentClient({
     };
   }, [room, refreshConnectionDetails]);
 
-  // 1. Connect to the room
-  const [connected, setConnected] = useState(false);
   useEffect(() => {
     if (!popupOpen) {
       return;
@@ -62,66 +61,34 @@ function EmbedFixedAgentClient({
     if (!connectionDetails) {
       return;
     }
-
     let aborted = false;
-    const connect = async () => {
-      try {
-        await room.connect(connectionDetails.serverUrl, connectionDetails.participantToken);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (error: any) {
-        if (aborted) {
-          // Once the effect has cleaned up after itself, drop any errors
-          return;
-        }
-        console.error('Error connecting to room:', error);
-        setCurrentError({
-          title: 'There was an error connecting to the agent',
-          description: `${error.name}: ${error.message}`,
-        });
+
+    Promise.all([
+      room.localParticipant.setMicrophoneEnabled(true, undefined, {
+        preConnectBuffer: appConfig.isPreConnectBufferEnabled,
+      }),
+      room.connect(connectionDetails.serverUrl, connectionDetails.participantToken),
+    ]).catch((error) => {
+      if (aborted) {
+        // Once the effect has cleaned up after itself, drop any errors
+        //
+        // These errors are likely caused by this effect rerunning rapidly,
+        // resulting in a previous run `disconnect` running in parallel with
+        // a current run `connect`
         return;
       }
-      setConnected(true);
-    };
-    connect();
+
+      toastAlert({
+        title: 'There was an error connecting to the agent',
+        description: `${error.name}: ${error.message}`,
+      });
+    });
 
     return () => {
       aborted = true;
-      setConnected(false);
       room.disconnect();
     };
-  }, [room, popupOpen, connectionDetails, appConfig.isPreConnectBufferEnabled]);
-
-  // 2. Configure the room so it can be used to talk to the agent
-  useEffect(() => {
-    if (!connected) {
-      return;
-    }
-
-    let aborted = false;
-    const configure = async () => {
-      try {
-        await room.localParticipant.setMicrophoneEnabled(true, undefined, {
-          preConnectBuffer: appConfig.isPreConnectBufferEnabled,
-        });
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (error: any) {
-        if (aborted) {
-          // Once the effect has cleaned up after itself, drop any errors
-          return;
-        }
-        console.error('Error configuring room:', error);
-        setCurrentError({
-          title: 'There was an error connecting to the agent',
-          description: `${error.name}: ${error.message}`,
-        });
-      }
-    };
-    configure();
-
-    return () => {
-      aborted = true;
-    };
-  }, [room, connected]);
+  }, [popupOpen, room, connectionDetails, appConfig.isPreConnectBufferEnabled]);
 
   const triggerButton = (
     <Button
