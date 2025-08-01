@@ -202,7 +202,7 @@ function EmbedFixedAgentClient({
           {triggerButton}
 
           <motion.div
-            className="bg-bg2 fixed right-4 bottom-20 h-[480px] w-full max-w-[360px] rounded-md"
+            className="bg-bg2 fixed right-4 bottom-20 h-[480px] w-full max-w-[360px] rounded-md overflow-hidden"
             initial={false}
             animate={{
               opacity: popupOpen ? 1 : 0,

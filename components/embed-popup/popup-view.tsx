@@ -20,6 +20,7 @@ import { useDebugMode } from '@/hooks/useDebug';
 import type { AppConfig, EmbedErrorDetails } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { ChatInput } from '../livekit/chat/chat-input';
+import { AvatarTile } from '../livekit/avatar-tile';
 
 function isAgentAvailable(agentState: AgentState) {
   return agentState == 'listening' || agentState == 'thinking' || agentState == 'speaking';
@@ -40,7 +41,13 @@ export const PopupView = ({
   ref,
 }: React.ComponentProps<'div'> & SessionViewProps) => {
   const room = useRoomContext();
-  const { state: agentState, audioTrack: agentAudioTrack } = useVoiceAssistant();
+  const {
+    state: agentState,
+    audioTrack: agentAudioTrack,
+    videoTrack: agentVideoTrack,
+  } = useVoiceAssistant();
+  const agentHasAvatar = agentVideoTrack !== undefined;
+
   const {
     micTrackRef,
     // FIXME: how do I explicitly ensure only the microphone channel is used?
@@ -118,10 +125,9 @@ export const PopupView = ({
     agentState !== 'initializing';
 
   return (
-    <div ref={ref} inert={disabled} className="flex h-full w-full flex-col">
+    <div ref={ref} inert={disabled} className="flex h-full w-full flex-col overflow-hidden">
       <div className="relative h-0 shrink-1 grow-1">
         <motion.div
-          layoutId="avatar"
           initial={false}
           ref={messageScrollWrapperRef}
           animate={{ opacity: agentHasAvatar ? 0 : 1 }}
@@ -171,6 +177,27 @@ export const PopupView = ({
           {/* Add spacer at the bottom to ensure "agent listening" always has room */}
           <div className="mb-8" />
         </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0 }}
+          variants={{
+            visible: { opacity: 1, scale: 1 },
+            hidden: { opacity: 0, scale: 0 },
+          }}
+          animate={agentHasAvatar ? "visible" : "hidden"}
+          exit={{ opacity: 0, scale: 0 }}
+          transition={{
+            type: 'spring',
+            stiffness: 675,
+            damping: 75,
+            mass: 1,
+          }}
+          className={cn("w-full h-full relative", {"pointer-events-none": !agentHasAvatar})}
+        >
+          {agentVideoTrack ? (
+            <AvatarTile videoTrack={agentVideoTrack} className="object-cover h-full absolute left-1/2 -translate-x-1/2" />
+          ) : null}
+        </motion.div>
       </div>
 
       {visibleControls.leave ? (
@@ -210,7 +237,7 @@ export const PopupView = ({
             />
           </BarVisualizer>
 
-          <p className="animate-text-shimmer inline-block !bg-clip-text text-sm font-semibold text-transparent">
+          <p className="animate-text-shimmer inline-block !bg-clip-text text-sm font-semibold text-transparent select-none">
             Agent listening...
           </p>
         </motion.div>
