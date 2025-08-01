@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Room, RoomEvent } from 'livekit-client';
 import { motion } from 'motion/react';
 import { RoomAudioRenderer, RoomContext, StartAudio } from '@livekit/components-react';
@@ -11,7 +11,6 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import useConnectionDetails from '@/hooks/use-connection-details';
 import { type AppConfig, EmbedErrorDetails } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { ConnectionDetails } from '@/app/api/connection-details/route';
 
 export type EmbedFixedAgentClientProps = {
   appConfig: AppConfig;
@@ -78,7 +77,7 @@ function EmbedFixedAgentClient({
         return;
       }
 
-      toastAlert({
+      setCurrentError({
         title: 'There was an error connecting to the agent',
         description: `${error.name}: ${error.message}`,
       });
@@ -169,7 +168,7 @@ function EmbedFixedAgentClient({
           {triggerButton}
 
           <motion.div
-            className="bg-bg2 fixed right-4 bottom-20 h-[480px] w-full max-w-[360px] rounded-md overflow-hidden"
+            className="bg-bg2 fixed right-4 bottom-20 h-[480px] w-full max-w-[360px] overflow-hidden rounded-md"
             initial={false}
             animate={{
               opacity: popupOpen ? 1 : 0,

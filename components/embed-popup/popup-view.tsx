@@ -19,8 +19,8 @@ import useChatAndTranscription from '@/hooks/use-chat-and-transcription';
 import { useDebugMode } from '@/hooks/useDebug';
 import type { AppConfig, EmbedErrorDetails } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { ChatInput } from '../livekit/chat/chat-input';
 import { AvatarTile } from '../livekit/avatar-tile';
+import { ChatInput } from '../livekit/chat/chat-input';
 
 function isAgentAvailable(agentState: AgentState) {
   return agentState == 'listening' || agentState == 'thinking' || agentState == 'speaking';
@@ -116,7 +116,7 @@ export const PopupView = ({
     }, 10_000);
 
     return () => clearTimeout(timeout);
-  }, [agentState, sessionStarted, room]);
+  }, [agentState, sessionStarted, room, onDisplayError]);
 
   const showAgentListening =
     appConfig.isPreConnectBufferEnabled &&
@@ -131,7 +131,9 @@ export const PopupView = ({
           initial={false}
           ref={messageScrollWrapperRef}
           animate={{ opacity: agentHasAvatar ? 0 : 1 }}
-          className={cn("absolute inset-0 flex flex-col overflow-y-auto p-2", {"pointer-events-none": agentHasAvatar})}
+          className={cn('absolute inset-0 flex flex-col overflow-y-auto p-2', {
+            'pointer-events-none': agentHasAvatar,
+          })}
         >
           <motion.div
             className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center"
@@ -184,7 +186,7 @@ export const PopupView = ({
             visible: { opacity: 1, scale: 1 },
             hidden: { opacity: 0, scale: 0 },
           }}
-          animate={agentHasAvatar ? "visible" : "hidden"}
+          animate={agentHasAvatar ? 'visible' : 'hidden'}
           exit={{ opacity: 0, scale: 0 }}
           transition={{
             type: 'spring',
@@ -192,10 +194,13 @@ export const PopupView = ({
             damping: 75,
             mass: 1,
           }}
-          className={cn("w-full h-full relative", {"pointer-events-none": !agentHasAvatar})}
+          className={cn('relative h-full w-full', { 'pointer-events-none': !agentHasAvatar })}
         >
           {agentVideoTrack ? (
-            <AvatarTile videoTrack={agentVideoTrack} className="object-cover h-full absolute left-1/2 -translate-x-1/2" />
+            <AvatarTile
+              videoTrack={agentVideoTrack}
+              className="absolute left-1/2 h-full -translate-x-1/2 object-cover"
+            />
           ) : null}
         </motion.div>
       </div>

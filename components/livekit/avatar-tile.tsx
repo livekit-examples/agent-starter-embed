@@ -6,16 +6,13 @@ interface AgentAudioTileProps {
   className?: string;
 }
 
-export const AvatarTile = ({
-  videoTrack,
-  className,
-}: AgentAudioTileProps) => {
+export const AvatarTile = ({ videoTrack, className }: AgentAudioTileProps) => {
   return (
     <VideoTrack
       trackRef={videoTrack}
       width={videoTrack?.publication.dimensions?.width ?? 0}
       height={videoTrack?.publication.dimensions?.height ?? 0}
-      className={cn("rounded-md", className)}
+      className={cn('rounded-md', className)}
     />
   );
 };
