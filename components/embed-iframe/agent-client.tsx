@@ -45,34 +45,31 @@ function EmbedAgentClient({ appConfig }: AppProps) {
   }, [room, refreshConnectionDetails]);
 
   useEffect(() => {
-    if (!sessionStarted) {
-      return;
-    }
-    if (room.state !== 'disconnected') {
-      return;
-    }
-    if (!connectionDetails) {
-      return;
-    }
-
-    const connect = async () => {
-      try {
-        await room.connect(connectionDetails.serverUrl, connectionDetails.participantToken);
-        await room.localParticipant.setMicrophoneEnabled(true, undefined, {
+    let aborted = false;
+    if (sessionStarted && room.state === 'disconnected' && connectionDetails) {
+      Promise.all([
+        room.localParticipant.setMicrophoneEnabled(true, undefined, {
           preConnectBuffer: appConfig.isPreConnectBufferEnabled,
-        });
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (error: any) {
-        console.error('Error connecting to agent:', error);
+        }),
+        room.connect(connectionDetails.serverUrl, connectionDetails.participantToken),
+      ]).catch((error) => {
+        if (aborted) {
+          // Once the effect has cleaned up after itself, drop any errors
+          //
+          // These errors are likely caused by this effect rerunning rapidly,
+          // resulting in a previous run `disconnect` running in parallel with
+          // a current run `connect`
+          return;
+        }
+
         setCurrentError({
           title: 'There was an error connecting to the agent',
           description: `${error.name}: ${error.message}`,
         });
-      }
-    };
-    connect();
-
+      });
+    }
     return () => {
+      aborted = true;
       room.disconnect();
     };
   }, [room, sessionStarted, connectionDetails, appConfig.isPreConnectBufferEnabled]);
