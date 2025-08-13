@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Track } from 'livekit-client';
 import { AnimatePresence, motion } from 'motion/react';
 import {
@@ -19,6 +19,7 @@ import useChatAndTranscription from '@/hooks/use-chat-and-transcription';
 import { useDebugMode } from '@/hooks/useDebug';
 import type { AppConfig, EmbedErrorDetails } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import { AvatarTile } from '../livekit/avatar-tile';
 import { ChatInput } from '../livekit/chat/chat-input';
 
 function isAgentAvailable(agentState: AgentState) {
@@ -40,7 +41,13 @@ export const PopupView = ({
   ref,
 }: React.ComponentProps<'div'> & SessionViewProps) => {
   const room = useRoomContext();
-  const { state: agentState, audioTrack: agentAudioTrack } = useVoiceAssistant();
+  const {
+    state: agentState,
+    audioTrack: agentAudioTrack,
+    videoTrack: agentVideoTrack,
+  } = useVoiceAssistant();
+  const agentHasAvatar = agentVideoTrack !== undefined;
+
   const {
     micTrackRef,
     // FIXME: how do I explicitly ensure only the microphone channel is used?
@@ -53,6 +60,15 @@ export const PopupView = ({
     saveUserChoices: true,
   });
   const { messages, send } = useChatAndTranscription();
+
+  // When new transcription messages are generated, automatically scroll to the bottom
+  const messageScrollWrapperRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (!messageScrollWrapperRef.current) {
+      return;
+    }
+    messageScrollWrapperRef.current.scrollTop = messageScrollWrapperRef.current.scrollHeight;
+  }, [messages]);
 
   const onLeave = () => {
     handleDisconnect();
@@ -100,7 +116,7 @@ export const PopupView = ({
     }, 10_000);
 
     return () => clearTimeout(timeout);
-  }, [agentState, sessionStarted, room]);
+  }, [agentState, sessionStarted, room, onDisplayError]);
 
   const showAgentListening =
     appConfig.isPreConnectBufferEnabled &&
@@ -109,51 +125,84 @@ export const PopupView = ({
     agentState !== 'initializing';
 
   return (
-    <div ref={ref} inert={disabled} className="flex h-full w-full flex-col">
-      <div className="relative flex h-0 shrink-1 grow-1 flex-col justify-end overflow-y-auto p-2">
+    <div ref={ref} inert={disabled} className="flex h-full w-full flex-col overflow-hidden">
+      <div className="relative h-0 shrink-1 grow-1">
         <motion.div
-          className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center"
           initial={false}
-          animate={{
-            opacity: agentState === 'connecting' ? 1 : 0,
-            pointerEvents: agentState === 'connecting' ? 'auto' : 'none',
-          }}
+          ref={messageScrollWrapperRef}
+          animate={{ opacity: agentHasAvatar ? 0 : 1 }}
+          className={cn('absolute inset-0 flex flex-col overflow-y-auto p-2', {
+            'pointer-events-none': agentHasAvatar,
+          })}
         >
-          <BarVisualizer
-            barCount={5}
-            state={agentState}
-            options={{ minHeight: 5 }}
-            className={cn('flex aspect-video w-40 items-center justify-center gap-1')}
+          <motion.div
+            className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center"
+            initial={false}
+            animate={{
+              opacity: agentState === 'connecting' ? 1 : 0,
+              pointerEvents: agentState === 'connecting' ? 'auto' : 'none',
+            }}
           >
-            <span
-              className={cn([
-                'bg-muted min-h-4 w-4 rounded-full',
-                'origin-center transition-colors duration-250 ease-linear',
-                'data-[lk-highlighted=true]:bg-foreground data-[lk-muted=true]:bg-muted',
-              ])}
-            />
-          </BarVisualizer>
+            <BarVisualizer
+              barCount={5}
+              state={agentState}
+              options={{ minHeight: 5 }}
+              className={cn('flex aspect-video w-40 items-center justify-center gap-1')}
+            >
+              <span
+                className={cn([
+                  'bg-muted min-h-4 w-4 rounded-full',
+                  'origin-center transition-colors duration-250 ease-linear',
+                  'data-[lk-highlighted=true]:bg-foreground data-[lk-muted=true]:bg-muted',
+                ])}
+              />
+            </BarVisualizer>
+          </motion.div>
+
+          {/* Add spacer at the top to ensure "end" always has room */}
+          <div className="mt-auto" />
+
+          <AnimatePresence>
+            {messages.map((message) => (
+              <motion.div
+                key={message.id}
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 1, height: 'auto', translateY: 0.001 }}
+                transition={{ duration: 0.5, ease: 'easeOut' }}
+              >
+                <ChatEntry hideName key={message.id} entry={message} />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+
+          {/* Add spacer at the bottom to ensure "agent listening" always has room */}
+          <div className="mb-8" />
         </motion.div>
 
-        {/* Add spacer at the top to ensure "end" always has room */}
-        <div className="mt-4" />
-
-        <AnimatePresence>
-          {messages.map((message) => (
-            <motion.div
-              key={message.id}
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 1, height: 'auto', translateY: 0.001 }}
-              transition={{ duration: 0.5, ease: 'easeOut' }}
-            >
-              <ChatEntry hideName key={message.id} entry={message} />
-            </motion.div>
-          ))}
-        </AnimatePresence>
-
-        {/* Add spacer at the bottom to ensure "agent listening" always has room */}
-        <div className="mb-8" />
+        <motion.div
+          initial={{ opacity: 0, scale: 0 }}
+          variants={{
+            visible: { opacity: 1, scale: 1 },
+            hidden: { opacity: 0, scale: 0 },
+          }}
+          animate={agentHasAvatar ? 'visible' : 'hidden'}
+          exit={{ opacity: 0, scale: 0 }}
+          transition={{
+            type: 'spring',
+            stiffness: 675,
+            damping: 75,
+            mass: 1,
+          }}
+          className={cn('relative h-full w-full', { 'pointer-events-none': !agentHasAvatar })}
+        >
+          {agentVideoTrack ? (
+            <AvatarTile
+              videoTrack={agentVideoTrack}
+              className="absolute left-1/2 h-full -translate-x-1/2 object-cover"
+            />
+          ) : null}
+        </motion.div>
       </div>
 
       {visibleControls.leave ? (
@@ -193,7 +242,7 @@ export const PopupView = ({
             />
           </BarVisualizer>
 
-          <p className="animate-text-shimmer inline-block !bg-clip-text text-sm font-semibold text-transparent">
+          <p className="animate-text-shimmer inline-block !bg-clip-text text-sm font-semibold text-transparent select-none">
             Agent listening...
           </p>
         </motion.div>

@@ -60,28 +60,34 @@ function EmbedFixedAgentClient({
     if (!connectionDetails) {
       return;
     }
+    let aborted = false;
 
-    const connect = async () => {
-      try {
-        await room.connect(connectionDetails.serverUrl, connectionDetails.participantToken);
-        await room.localParticipant.setMicrophoneEnabled(true, undefined, {
-          preConnectBuffer: appConfig.isPreConnectBufferEnabled,
-        });
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (error: any) {
-        console.error('Error connecting to agent:', error);
-        setCurrentError({
-          title: 'There was an error connecting to the agent',
-          description: `${error.name}: ${error.message}`,
-        });
+    Promise.all([
+      room.localParticipant.setMicrophoneEnabled(true, undefined, {
+        preConnectBuffer: appConfig.isPreConnectBufferEnabled,
+      }),
+      room.connect(connectionDetails.serverUrl, connectionDetails.participantToken),
+    ]).catch((error) => {
+      if (aborted) {
+        // Once the effect has cleaned up after itself, drop any errors
+        //
+        // These errors are likely caused by this effect rerunning rapidly,
+        // resulting in a previous run `disconnect` running in parallel with
+        // a current run `connect`
+        return;
       }
-    };
-    connect();
+
+      setCurrentError({
+        title: 'There was an error connecting to the agent',
+        description: `${error.name}: ${error.message}`,
+      });
+    });
 
     return () => {
+      aborted = true;
       room.disconnect();
     };
-  }, [room, popupOpen, connectionDetails, appConfig.isPreConnectBufferEnabled]);
+  }, [popupOpen, room, connectionDetails, appConfig.isPreConnectBufferEnabled]);
 
   const triggerButton = (
     <Button
@@ -162,7 +168,7 @@ function EmbedFixedAgentClient({
           {triggerButton}
 
           <motion.div
-            className="bg-bg2 fixed right-4 bottom-20 h-[480px] w-full max-w-[360px] rounded-md"
+            className="bg-bg2 fixed right-4 bottom-20 h-[480px] w-full max-w-[360px] overflow-hidden rounded-md"
             initial={false}
             animate={{
               opacity: popupOpen ? 1 : 0,
