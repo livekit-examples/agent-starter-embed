@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom/client';
 import { getAppConfig } from '@/lib/env';
-import globalCss from '../../app/globals.css';
+import globalCss from '@/styles/globals.css';
 import EmbedFixedAgentClient from './agent-client';
 
 const wrapper = document.createElement('div');
