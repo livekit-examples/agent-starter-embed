@@ -19,8 +19,6 @@ export default function Welcome() {
   const [, forceUpdate] = useState(0);
   const theme = (localStorage.getItem(THEME_STORAGE_KEY) as ThemeMode) ?? 'dark';
 
-  console.log(selectedTab);
-
   const embedUrl = useMemo(() => {
     const url = new URL('/embed', window.location.origin);
     url.searchParams.set('theme', theme);
