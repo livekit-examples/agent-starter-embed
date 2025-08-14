@@ -23,16 +23,26 @@ Then run the app with:
 
 ```bash
 pnpm install
-pnpm build-embed-popup-script # Builds a script used by the popup embed
+pnpm build-embed-popup-script # Builds the embed-popup.js script
 pnpm dev
 ```
 
-Open http://localhost:3000 in your browser, and follow the instructions.
+Open http://localhost:3000 in your browser to experience the 2 embeddable demos.
 
 You'll also need an agent to speak with. Try our starter agent for [Python](https://github.com/livekit-examples/agent-starter-python), [Node.js](https://github.com/livekit-examples/agent-starter-node), or [create your own from scratch](https://docs.livekit.io/agents/start/voice-ai/).
 
 > [!NOTE]
 > If you need to modify the LiveKit project credentials used, you can edit `.env.local` (copy from `.env.example` if you don't have one) to suit your needs.
+
+## Local Development
+
+http://localhost:3000 will respond to code changes in real time through [NextJS Fast Refresh](https://nextjs.org/docs/architecture/fast-refresh) to support a rapid iteration feedback loop.
+
+## Production deployment of embed-popup.js script
+
+Any code changes you see locally will not be reflected in `embed-popup.js` until you run `pnpm build-embed-popup-script`.
+
+You can test your latest build of `embed-popup.js` at http://localhost:3000/popover.
 
 ## Contributing
 

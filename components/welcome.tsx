@@ -30,6 +30,11 @@ export default function Welcome() {
     return url.toString();
   }, []);
 
+  const popoverTestUrl = useMemo(() => {
+    const url = new URL('/popover', window.location.origin);
+    return url.toString();
+  }, []);
+
   const handleClickIframe = () => {
     router.push(`${pathname}?tab=iframe`);
   };
@@ -39,8 +44,8 @@ export default function Welcome() {
   };
 
   return (
-    <div className="text-fg1 mx-auto flex min-h-screen max-w-prose flex-col py-4 md:justify-center md:py-20">
-      <div className="h-[520px] space-y-8 px-4">
+    <div className="text-fg1 mx-auto flex min-h-screen max-w-prose flex-col justify-center py-4 md:py-20">
+      <div className="h-[520px] space-y-10 px-4">
         <div className="items-top flex justify-between">
           <h1 className="text-fg0 text-2xl font-bold text-pretty">LiveKit Agent Embed Starter</h1>
           <div className="mt-1">
@@ -97,16 +102,18 @@ export default function Welcome() {
             <div>
               <h4 className="text-fg0 mb-1 font-semibold">Embed code</h4>
               <pre className="border-separator2 bg-bg2 overflow-auto rounded-md border px-2 py-1">
-                {`<iframe\n  src="`}
-                <a
-                  href={embedUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary underline"
-                >
-                  {embedUrl}
-                </a>
-                {`"\n  style="width: 320px; height: 64px;"\n></iframe>`}
+                <code className="font-mono">
+                  {`<iframe\n  src="`}
+                  <a
+                    href={embedUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary underline"
+                  >
+                    {embedUrl}
+                  </a>
+                  {`"\n  style="width: 320px; height: 64px;"\n></iframe>`}
+                </code>
               </pre>
             </div>
             <div className="flex justify-center">
@@ -121,10 +128,19 @@ export default function Welcome() {
             <div>
               <h4 className="text-fg0 mb-1 font-semibold">Embed code</h4>
               <pre className="border-separator2 bg-bg2 overflow-auto rounded-md border px-2 py-1">
-                {`<script src="${embedPopupUrl}"></script>`}
+                <code className="font-mono">{`<script src="${embedPopupUrl}"></script>`}</code>
               </pre>
+              <p className="text-fg4 my-4 text-sm">
+                To apply local changes, run{' '}
+                <code className="text-fg0">pnpm build-embed-popup-script</code>.<br />
+                Test your latest build at{' '}
+                <a href="/popover" target="_blank" rel="noopener noreferrer" className="underline">
+                  {popoverTestUrl}
+                </a>
+                .
+              </p>
             </div>
-            <div className="flex justify-center">
+            <div className="flex justify-center pt-8">
               <div className="text-fgAccent flex gap-1">
                 <p className="grow text-sm">
                   The popover button should appear in the bottom right corner of the screen
