@@ -15,7 +15,8 @@ export default function Welcome() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const selectedTab = searchParams.get('tab') ?? 'iframe';
+  const tabParam = searchParams.get('tab');
+  const selectedTab = tabParam ? (tabParam === 'popup' ? 'popup' : 'iframe') : 'iframe';
   const [, forceUpdate] = useState(0);
   const theme = (localStorage.getItem(THEME_STORAGE_KEY) as ThemeMode) ?? 'dark';
 
