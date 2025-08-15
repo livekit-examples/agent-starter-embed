@@ -30,8 +30,8 @@ export default function Welcome() {
     return url.toString();
   }, []);
 
-  const popoverTestUrl = useMemo(() => {
-    const url = new URL('/popover', window.location.origin);
+  const popupTestUrl = useMemo(() => {
+    const url = new URL('/popup', window.location.origin);
     return url.toString();
   }, []);
 
@@ -39,8 +39,8 @@ export default function Welcome() {
     router.push(`${pathname}?tab=iframe`);
   };
 
-  const handleClickPopover = () => {
-    router.push(`${pathname}?tab=popover`);
+  const handleClickPopup = () => {
+    router.push(`${pathname}?tab=popup`);
   };
 
   return (
@@ -84,13 +84,13 @@ export default function Welcome() {
               </button>
               <button
                 type="button"
-                onClick={handleClickPopover}
+                onClick={handleClickPopup}
                 className={cn(
                   'text-fg2 focus:text-fgAccent hover:text-fgAccent z-10 flex-1 cursor-pointer py-2 font-mono transition-colors',
-                  selectedTab === 'popover' && 'text-fgAccent font-bold'
+                  selectedTab === 'popup' && 'text-fgAccent font-bold'
                 )}
               >
-                Popover
+                Popup
               </button>
             </div>
           </div>
@@ -126,9 +126,9 @@ export default function Welcome() {
           </>
         )}
 
-        {selectedTab === 'popover' && (
+        {selectedTab === 'popup' && (
           <>
-            <h3 className="sr-only text-lg font-semibold">Popover Style</h3>
+            <h3 className="sr-only text-lg font-semibold">Popup Style</h3>
             <div>
               <h4 className="text-fg0 mb-1 font-semibold">Embed code</h4>
               <pre className="border-separator2 bg-bg2 overflow-auto rounded-md border px-2 py-1">
@@ -138,8 +138,8 @@ export default function Welcome() {
                 To apply local changes, run{' '}
                 <code className="text-fg0">pnpm build-embed-popup-script</code>.<br />
                 Test your latest build at{' '}
-                <a href="/popover" target="_blank" rel="noopener noreferrer" className="underline">
-                  {popoverTestUrl}
+                <a href="/popup" target="_blank" rel="noopener noreferrer" className="underline">
+                  {popupTestUrl}
                 </a>
                 .
               </p>
@@ -147,7 +147,7 @@ export default function Welcome() {
             <div className="flex justify-center pt-8">
               <div className="text-fgAccent flex gap-1">
                 <p className="grow text-sm">
-                  The popover button should appear in the bottom right corner of the screen
+                  The popup button should appear in the bottom right corner of the screen
                 </p>
                 <HandPointingIcon
                   size={16}

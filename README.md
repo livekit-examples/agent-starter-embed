@@ -42,7 +42,7 @@ http://localhost:3000 will respond to code changes in real time through [NextJS 
 
 Any code changes you see locally will not be reflected in `embed-popup.js` until you run `pnpm build-embed-popup-script`.
 
-You can test your latest build of `embed-popup.js` at http://localhost:3000/popover.
+You can test your latest build of `embed-popup.js` at http://localhost:3000/popup.
 
 ## Contributing
 
