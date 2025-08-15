@@ -117,7 +117,11 @@ export default function Welcome() {
               </pre>
             </div>
             <div className="flex justify-center">
-              <iframe src={embedUrl} style={{ width: 320, height: 64 }} />
+              <iframe
+                src={embedUrl}
+                style={{ width: 320, height: 64 }}
+                className="opacity-100 transition-opacity duration-500 [@starting-style]:opacity-0"
+              />
             </div>
           </>
         )}

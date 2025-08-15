@@ -104,8 +104,8 @@ export const PopupView = ({
       <div className="relative flex h-full shrink-1 grow-1 flex-col p-1">
         <motion.div
           className={cn(
-            'bg-bg2 dark:bg-bg1 border-separator1 pointer-events-none absolute z-10 flex aspect-[1.5] w-40 items-center justify-center rounded-2xl',
-            agentHasConnected && 'bg-bg1 border drop-shadow-2xl'
+            'bg-bg2 dark:bg-bg1 pointer-events-none absolute z-10 flex aspect-[1.5] w-64 items-center justify-center rounded-2xl border border-transparent transition-colors',
+            agentHasConnected && 'bg-bg1 border-separator1 drop-shadow-2xl'
           )}
           initial={{
             scale: 1,
@@ -116,7 +116,7 @@ export const PopupView = ({
             transformOrigin: 'center top',
           }}
           animate={{
-            scale: agentHasConnected ? 0.5 : 1,
+            scale: agentHasConnected ? 0.4 : 1,
             top: agentHasConnected ? '12px' : '50%',
             translateY: agentHasConnected ? '0' : '-50%',
           }}
@@ -132,11 +132,11 @@ export const PopupView = ({
             state={agentState}
             trackRef={agentAudioTrack}
             options={{ minHeight: 5 }}
-            className="flex h-full w-auto items-center justify-center gap-1"
+            className="flex h-full w-auto items-center justify-center gap-3"
           >
             <span
               className={cn([
-                'bg-muted min-h-4 w-4 rounded-full',
+                'bg-muted min-h-6 w-6 rounded-full',
                 'origin-center transition-colors duration-250 ease-linear',
                 'data-[lk-highlighted=true]:bg-foreground data-[lk-muted=true]:bg-muted',
               ])}

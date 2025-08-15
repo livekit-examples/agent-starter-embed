@@ -46,47 +46,69 @@ export function Trigger({ error = false, popupOpen, onToggle }: TriggerProps) {
           'fixed right-4 bottom-4 z-50'
         )}
       >
+        {/* ring */}
         <motion.div
           className={cn(
-            'absolute inset-0 z-10 rounded-full',
+            'absolute inset-0 z-10 rounded-full transition-colors',
             !error &&
               isAgentConnecting &&
               'bg-fgAccent/30 animate-spin [background-image:conic-gradient(from_0deg,transparent_0%,transparent_30%,var(--color-fgAccent)_50%,transparent_70%,transparent_100%)]',
-            agentState === 'disconnected' && 'bg-fgAccent',
+            !error && agentState === 'disconnected' && 'bg-fgAccent',
             (error || isAgentConnected) && 'bg-destructive-foreground'
           )}
         />
+        {/* icon */}
         <div
           className={cn(
-            'relative z-20 grid size-11 place-items-center rounded-full',
-            error || isAgentConnected ? 'bg-destructive' : 'bg-bg1'
+            'relative z-20 grid size-11 place-items-center rounded-full transition-colors',
+            !error && isAgentConnecting && 'bg-bg1',
+            !error && agentState === 'disconnected' && 'bg-fgAccent',
+            (error || isAgentConnected) && 'bg-destructive'
           )}
         >
-          {!error && isAgentConnected && (
-            <PhoneDisconnectIcon
-              weight="bold"
-              size={20}
-              className="text-destructive-foreground size-5"
-            />
-          )}
-          {!error && isAgentConnecting && (
-            <XIcon size={20} weight="bold" className="text-fg0 size-5" />
-          )}
-          {!error && agentState === 'disconnected' && (
-            <>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/lk-logo.svg" alt="LiveKit Logo" className="block size-4 dark:hidden" />
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/lk-logo-dark.svg"
-                alt="LiveKit Logo"
-                className="hidden size-4 dark:block"
-              />
-            </>
-          )}
-          {error && (
-            <XIcon size={20} weight="bold" className="text-destructive-foreground size-5" />
-          )}
+          <AnimatePresence>
+            {!error && isAgentConnected && (
+              <motion.div
+                key="disconnect"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: popupOpen ? -20 : 20 }}
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+              >
+                <PhoneDisconnectIcon
+                  size={20}
+                  weight="bold"
+                  className="text-destructive-foreground size-5"
+                />
+              </motion.div>
+            )}
+            {!error && agentState === 'disconnected' && (
+              <motion.div
+                key="lk-logo"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: popupOpen ? 20 : -20 }}
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+              >
+                <div className="size-5 bg-white [mask-image:url(/lk-logo.svg)] [mask-size:contain] dark:bg-black" />
+              </motion.div>
+            )}
+            {(error || isAgentConnecting) && (
+              <motion.div
+                key="dismiss"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: popupOpen ? -20 : 20 }}
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+              >
+                <XIcon
+                  size={20}
+                  weight="bold"
+                  className={cn('text-fg0 size-5', error && 'text-destructive-foreground')}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </AnimatedButton>
     </AnimatePresence>

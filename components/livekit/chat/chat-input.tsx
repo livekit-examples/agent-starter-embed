@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { PaperPlaneRightIcon } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -45,13 +46,12 @@ export function ChatInput({ onSend, className, disabled, ...props }: ChatInputPr
         className="w-0 shrink-1 grow-1 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
       />
       <Button
-        size="sm"
+        size="icon"
         type="submit"
         variant={isDisabled ? 'secondary' : 'primary'}
         disabled={isDisabled}
-        className="font-mono uppercase"
       >
-        Send
+        <PaperPlaneRightIcon weight="bold" />
       </Button>
     </form>
   );
