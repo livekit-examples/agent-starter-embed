@@ -90,7 +90,14 @@ export function Trigger({ error = false, popupOpen, onToggle }: TriggerProps) {
                 exit={{ opacity: 0, y: popupOpen ? 20 : -20 }}
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
               >
-                <div className="size-5 bg-white [mask-image:url(/lk-logo.svg)] [mask-size:contain] dark:bg-black" />
+                <div
+                  className="bg-bg1 size-5"
+                  // webpack build throws if I use custom tailwind classes to achive this
+                  style={{
+                    maskImage: 'url(/lk-logo.svg)',
+                    maskSize: 'contain',
+                  }}
+                />
               </motion.div>
             )}
             {(error || isAgentConnecting) && (
