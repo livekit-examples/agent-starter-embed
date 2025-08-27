@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@livekit/components-react':
         specifier: ^2.9.9
-        version: 2.9.14(@livekit/krisp-noise-filter@0.2.16(livekit-client@2.15.5(@types/dom-mediacapture-record@1.0.22)))(livekit-client@2.15.5(@types/dom-mediacapture-record@1.0.22))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(tslib@2.8.1)
+        version: 2.9.14(@livekit/krisp-noise-filter@0.2.16(livekit-client@2.15.6(@types/dom-mediacapture-record@1.0.22)))(livekit-client@2.15.6(@types/dom-mediacapture-record@1.0.22))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(tslib@2.8.1)
       '@phosphor-icons/react':
         specifier: ^2.1.8
         version: 2.1.10(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -43,7 +43,7 @@ importers:
         version: 2.1.1
       livekit-client:
         specifier: ^2.13.3
-        version: 2.15.5(@types/dom-mediacapture-record@1.0.22)
+        version: 2.15.6(@types/dom-mediacapture-record@1.0.22)
       livekit-server-sdk:
         specifier: ^2.13.0
         version: 2.13.2
@@ -2278,8 +2278,8 @@ packages:
   lines-and-columns@1.2.4:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
 
-  livekit-client@2.15.5:
-    resolution: {integrity: sha512-zn36akmDlqZxlrTOUgYXtxtj35HQ44aJ+mgKat9BTSPiZru4RjEHOtp8RJE6jGoN2miJlWiOeEKHB2+ae3YrSw==}
+  livekit-client@2.15.6:
+    resolution: {integrity: sha512-bLdNXklpMfWofw9pCF2XGyYA3OUddXXG4KY+gTN7dh+YvG7TX+YaP/Kt9ugdZ3KziQLqK2HG1ict4s7uD0JAiQ==}
     peerDependencies:
       '@types/dom-mediacapture-record': ^1
 
@@ -3459,29 +3459,29 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@livekit/components-core@0.12.9(livekit-client@2.15.5(@types/dom-mediacapture-record@1.0.22))(tslib@2.8.1)':
+  '@livekit/components-core@0.12.9(livekit-client@2.15.6(@types/dom-mediacapture-record@1.0.22))(tslib@2.8.1)':
     dependencies:
       '@floating-ui/dom': 1.6.13
-      livekit-client: 2.15.5(@types/dom-mediacapture-record@1.0.22)
+      livekit-client: 2.15.6(@types/dom-mediacapture-record@1.0.22)
       loglevel: 1.9.1
       rxjs: 7.8.2
       tslib: 2.8.1
 
-  '@livekit/components-react@2.9.14(@livekit/krisp-noise-filter@0.2.16(livekit-client@2.15.5(@types/dom-mediacapture-record@1.0.22)))(livekit-client@2.15.5(@types/dom-mediacapture-record@1.0.22))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(tslib@2.8.1)':
+  '@livekit/components-react@2.9.14(@livekit/krisp-noise-filter@0.2.16(livekit-client@2.15.6(@types/dom-mediacapture-record@1.0.22)))(livekit-client@2.15.6(@types/dom-mediacapture-record@1.0.22))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(tslib@2.8.1)':
     dependencies:
-      '@livekit/components-core': 0.12.9(livekit-client@2.15.5(@types/dom-mediacapture-record@1.0.22))(tslib@2.8.1)
+      '@livekit/components-core': 0.12.9(livekit-client@2.15.6(@types/dom-mediacapture-record@1.0.22))(tslib@2.8.1)
       clsx: 2.1.1
-      livekit-client: 2.15.5(@types/dom-mediacapture-record@1.0.22)
+      livekit-client: 2.15.6(@types/dom-mediacapture-record@1.0.22)
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
       tslib: 2.8.1
       usehooks-ts: 3.1.1(react@19.1.1)
     optionalDependencies:
-      '@livekit/krisp-noise-filter': 0.2.16(livekit-client@2.15.5(@types/dom-mediacapture-record@1.0.22))
+      '@livekit/krisp-noise-filter': 0.2.16(livekit-client@2.15.6(@types/dom-mediacapture-record@1.0.22))
 
-  '@livekit/krisp-noise-filter@0.2.16(livekit-client@2.15.5(@types/dom-mediacapture-record@1.0.22))':
+  '@livekit/krisp-noise-filter@0.2.16(livekit-client@2.15.6(@types/dom-mediacapture-record@1.0.22))':
     dependencies:
-      livekit-client: 2.15.5(@types/dom-mediacapture-record@1.0.22)
+      livekit-client: 2.15.6(@types/dom-mediacapture-record@1.0.22)
     optional: true
 
   '@livekit/mutex@1.1.1': {}
@@ -5375,7 +5375,7 @@ snapshots:
 
   lines-and-columns@1.2.4: {}
 
-  livekit-client@2.15.5(@types/dom-mediacapture-record@1.0.22):
+  livekit-client@2.15.6(@types/dom-mediacapture-record@1.0.22):
     dependencies:
       '@livekit/mutex': 1.1.1
       '@livekit/protocol': 1.39.3
