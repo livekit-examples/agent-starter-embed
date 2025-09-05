@@ -17,6 +17,7 @@ import useChatAndTranscription from '@/hooks/use-chat-and-transcription';
 import { useDebugMode } from '@/hooks/useDebug';
 import type { EmbedErrorDetails } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import { AvatarTile } from '../livekit/avatar-tile';
 import { ChatInput } from '../livekit/chat/chat-input';
 
 function isAgentAvailable(agentState: AgentState) {
@@ -37,7 +38,13 @@ export const PopupView = ({
 }: React.ComponentProps<'div'> & SessionViewProps) => {
   const room = useRoomContext();
   const transcriptRef = useRef<HTMLDivElement>(null);
-  const { state: agentState, audioTrack: agentAudioTrack } = useVoiceAssistant();
+  const {
+    state: agentState,
+    audioTrack: agentAudioTrack,
+    videoTrack: agentVideoTrack,
+  } = useVoiceAssistant();
+  const agentHasAvatar = agentVideoTrack !== undefined;
+
   const {
     micTrackRef,
     // FIXME: how do I explicitly ensure only the microphone channel is used?
@@ -165,6 +172,29 @@ export const PopupView = ({
             </AnimatePresence>
           </div>
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0 }}
+          variants={{
+            visible: { opacity: 1, scale: 1 },
+            hidden: { opacity: 0, scale: 0 },
+          }}
+          animate={agentHasAvatar ? 'visible' : 'hidden'}
+          exit={{ opacity: 0, scale: 0 }}
+          transition={{
+            type: 'spring',
+            stiffness: 675,
+            damping: 75,
+            mass: 1,
+          }}
+          className={cn('absolute inset-1 h-full overflow-hidden rounded-t-[24px] pb-8', {
+            'pointer-events-none': !agentHasAvatar,
+          })}
+        >
+          {agentVideoTrack ? (
+            <AvatarTile videoTrack={agentVideoTrack} className="h-full object-cover" />
+          ) : null}
+        </motion.div>
 
         <div
           aria-label="Voice assistant controls"
