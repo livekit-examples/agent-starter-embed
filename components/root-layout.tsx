@@ -5,6 +5,11 @@ import { getAppConfig, getOrigin } from '@/lib/env';
 import { cn } from '@/lib/utils';
 import '@/styles/globals.css';
 
+export const metadata = {
+  title: 'LiveKit Embeded Voice Agent',
+  description: 'LiveKit Embeded Voice Agent',
+};
+
 const publicSans = Public_Sans({
   variable: '--font-public-sans',
   subsets: ['latin'],
@@ -44,7 +49,7 @@ interface RootLayoutProps {
 export async function RootLayout({ children, className }: RootLayoutProps) {
   const hdrs = await headers();
   const origin = getOrigin(hdrs);
-  const { accent, accentDark, pageTitle, pageDescription } = await getAppConfig(origin);
+  const { accent, accentDark } = await getAppConfig(origin);
 
   const styles = [
     accent ? `:root { --primary: ${accent}; }` : '',
@@ -55,11 +60,7 @@ export async function RootLayout({ children, className }: RootLayoutProps) {
 
   return (
     <html lang="en" suppressHydrationWarning className={cn('scroll-smooth', className)}>
-      <head>
-        {styles && <style>{styles}</style>}
-        <title>{pageTitle}</title>
-        <meta name="description" content={pageDescription} />
-      </head>
+      <head>{styles && <style>{styles}</style>}</head>
       <body
         className={cn(publicSans.variable, commitMono.variable, 'overflow-x-hidden antialiased')}
       >
