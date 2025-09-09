@@ -14,3 +14,4 @@ jobs:
     steps:
       - name: Sync main to production branch and increment version
         uses: livekit-examples/sandbox-deploy-action
+        secrets: inherit
