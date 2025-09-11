@@ -21,7 +21,7 @@ interface AppProps {
 function EmbedAgentClient({ appConfig }: AppProps) {
   const room = useMemo(() => new Room(), []);
   const [sessionStarted, setSessionStarted] = useState(false);
-  const { connectionDetails, refreshConnectionDetails } = useConnectionDetails();
+  const { connectionDetails, refreshConnectionDetails } = useConnectionDetails(appConfig);
 
   const [currentError, setCurrentError] = useState<EmbedErrorDetails | null>(null);
 

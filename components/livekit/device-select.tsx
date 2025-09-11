@@ -16,7 +16,7 @@ type DeviceSelectProps = React.ComponentProps<typeof SelectTrigger> & {
   kind: MediaDeviceKind;
   track?: LocalAudioTrack | LocalVideoTrack | undefined;
   requestPermissions?: boolean;
-  onError?: (error: Error) => void;
+  onMediaDeviceError?: (error: Error) => void;
   initialSelection?: string;
   onActiveDeviceChange?: (deviceId: string) => void;
   onDeviceListChange?: (devices: MediaDeviceInfo[]) => void;
@@ -45,7 +45,7 @@ export function DeviceSelect({
   kind,
   track,
   requestPermissions,
-  onError,
+  onMediaDeviceError,
   // initialSelection,
   // onActiveDeviceChange,
   // onDeviceListChange,
@@ -59,8 +59,13 @@ export function DeviceSelect({
     room,
     track,
     requestPermissions,
-    onError,
+    onError: onMediaDeviceError,
   });
+
+  if (devices.length < 2) {
+    return null;
+  }
+
   return (
     <Select value={activeDeviceId} onValueChange={setActiveMediaDevice}>
       <SelectTrigger className={cn(selectVariants({ size }), props.className)}>

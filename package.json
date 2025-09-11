@@ -12,7 +12,8 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
-    "@livekit/components-react": "^2.9.9",
+    "@livekit/components-react": "^2.9.14",
+    "@livekit/protocol": "^1.41.0",
     "@phosphor-icons/react": "^2.1.8",
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-popover": "^1.1.14",
@@ -23,6 +24,7 @@
     "@radix-ui/react-toolbar": "^1.1.10",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "jose": "^6.1.0",
     "livekit-client": "^2.13.3",
     "livekit-server-sdk": "^2.13.0",
     "motion": "^12.16.0",
@@ -50,8 +52,8 @@
     "postcss-loader": "^8.1.1",
     "prettier": "^3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.11",
-    "tailwindcss": "^4",
     "style-loader": "^4.0.0",
+    "tailwindcss": "^4",
     "ts-loader": "^9.5.2",
     "tw-animate-css": "^1.3.0",
     "typescript": "^5",

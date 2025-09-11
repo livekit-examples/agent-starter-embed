@@ -1,9 +1,10 @@
 import type { AppConfig } from './lib/types';
 
 export const APP_CONFIG_DEFAULTS: AppConfig = {
+  sandboxId: undefined,
+  agentName: undefined,
+
   companyName: 'LiveKit',
-  pageTitle: 'LiveKit Embed',
-  pageDescription: 'A web embed connected to an agent, built with LiveKit',
 
   supportsChatInput: true,
   supportsVideoInput: true,
@@ -14,5 +15,4 @@ export const APP_CONFIG_DEFAULTS: AppConfig = {
   accent: '#002cf2',
   logoDark: '/lk-logo-dark.svg',
   accentDark: '#1fd5f9',
-  startButtonText: 'Start call',
 };

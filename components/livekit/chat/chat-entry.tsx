@@ -20,8 +20,9 @@ export const ChatEntry = ({
   hideName,
   hideTimestamp,
   className,
+  ref,
   ...props
-}: ChatEntryProps) => {
+}: React.ComponentProps<'li'> & ChatEntryProps) => {
   const { message, hasBeenEdited, time, locale, name } = useChatMessage(entry, messageFormatter);
 
   const isUser = entry.from?.isLocal ?? false;
@@ -29,6 +30,7 @@ export const ChatEntry = ({
 
   return (
     <li
+      ref={ref}
       data-lk-message-origin={messageOrigin}
       title={time.toLocaleTimeString(locale, { timeStyle: 'full' })}
       className={cn('group flex flex-col gap-0.5', className)}

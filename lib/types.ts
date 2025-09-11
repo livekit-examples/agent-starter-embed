@@ -8,8 +8,9 @@ export interface CombinedTranscription extends TranscriptionSegment {
 export type ThemeMode = 'dark' | 'light' | 'system';
 
 export interface AppConfig {
-  pageTitle: string;
-  pageDescription: string;
+  sandboxId?: string;
+  agentName?: string;
+
   companyName: string;
 
   supportsChatInput: boolean;
@@ -18,7 +19,6 @@ export interface AppConfig {
   isPreConnectBufferEnabled: boolean;
 
   logo: string;
-  startButtonText: string;
   accent?: string;
   logoDark?: string;
   accentDark?: string;

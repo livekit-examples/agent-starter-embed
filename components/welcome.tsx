@@ -19,6 +19,7 @@ export default function Welcome() {
   const selectedTab = tabParam ? (tabParam === 'popup' ? 'popup' : 'iframe') : 'iframe';
   const [, forceUpdate] = useState(0);
   const theme = (localStorage.getItem(THEME_STORAGE_KEY) as ThemeMode) ?? 'dark';
+  const IS_SANDBOX_ENVIRONMENT = process.env.NEXT_PUBLIC_CONN_DETAILS_ENDPOINT !== undefined;
 
   const embedUrl = useMemo(() => {
     const url = new URL('/embed', window.location.origin);
@@ -102,7 +103,7 @@ export default function Welcome() {
             <h3 className="sr-only text-lg font-semibold">IFrame Style</h3>
             <div>
               <h4 className="text-fg0 mb-1 font-semibold">Embed code</h4>
-              <pre className="border-separator2 bg-bg2 overflow-auto rounded-md border px-2 py-1">
+              <pre className="border-separator2 bg-bg2 scrollbar-custom overflow-auto rounded-md border px-2 py-1">
                 <code className="font-mono">
                   {`<iframe\n  src="`}
                   <a
@@ -132,18 +133,30 @@ export default function Welcome() {
             <h3 className="sr-only text-lg font-semibold">Popup Style</h3>
             <div>
               <h4 className="text-fg0 mb-1 font-semibold">Embed code</h4>
-              <pre className="border-separator2 bg-bg2 overflow-auto rounded-md border px-2 py-1">
+              <pre className="border-separator2 bg-bg2 scrollbar-custom overflow-auto rounded-md border px-2 py-1">
                 <code className="font-mono">{`<script src="${embedPopupUrl}"></script>`}</code>
               </pre>
-              <p className="text-fg4 my-4 text-sm">
-                To apply local changes, run{' '}
-                <code className="text-fg0">pnpm build-embed-popup-script</code>.<br />
-                Test your latest build at{' '}
-                <a href="/popup" target="_blank" rel="noopener noreferrer" className="underline">
-                  {popupTestUrl}
-                </a>
-                .
-              </p>
+              {/* hide build/test instructions in sandbox environment on Vercel */}
+              {!IS_SANDBOX_ENVIRONMENT && (
+                <div className="my-4">
+                  <p className="text-fg4 overflow-hidden text-sm text-ellipsis whitespace-nowrap">
+                    To apply local changes, run{' '}
+                    <code className="text-fg0">pnpm build-embed-popup-script</code>.
+                  </p>
+                  <p className="text-fg4 overflow-hidden text-sm text-ellipsis whitespace-nowrap">
+                    Test your latest build at{' '}
+                    <a
+                      href="/popup"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline"
+                    >
+                      {popupTestUrl}
+                    </a>
+                    .
+                  </p>
+                </div>
+              )}
             </div>
             <div className="flex justify-center pt-8">
               <div className="text-fgAccent flex gap-1">

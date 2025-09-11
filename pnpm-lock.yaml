@@ -9,8 +9,11 @@ importers:
   .:
     dependencies:
       '@livekit/components-react':
-        specifier: ^2.9.9
+        specifier: ^2.9.14
         version: 2.9.14(@livekit/krisp-noise-filter@0.2.16(livekit-client@2.15.6(@types/dom-mediacapture-record@1.0.22)))(livekit-client@2.15.6(@types/dom-mediacapture-record@1.0.22))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(tslib@2.8.1)
+      '@livekit/protocol':
+        specifier: ^1.41.0
+        version: 1.41.0
       '@phosphor-icons/react':
         specifier: ^2.1.8
         version: 2.1.10(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -41,6 +44,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      jose:
+        specifier: ^6.1.0
+        version: 6.1.0
       livekit-client:
         specifier: ^2.13.3
         version: 2.15.6(@types/dom-mediacapture-record@1.0.22)
@@ -2155,6 +2161,9 @@ packages:
 
   jose@5.10.0:
     resolution: {integrity: sha512-s+3Al/p9g32Iq+oqXxkW//7jk2Vig6FF1CFqzVXoTUXt2qz89YWbL+OwS17NFYEvxC35n0FKeGO2LGYSxeM2Gg==}
+
+  jose@6.1.0:
+    resolution: {integrity: sha512-TTQJyoEoKcC1lscpVDCSsVgYzUDg/0Bt3WE//WiTPK6uOCQC2KZS4MpugbMWt/zyjkopgZoXhZuCi00gLudfUA==}
 
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
@@ -5279,6 +5288,8 @@ snapshots:
   jiti@2.5.1: {}
 
   jose@5.10.0: {}
+
+  jose@6.1.0: {}
 
   js-tokens@4.0.0: {}
 
