@@ -4,6 +4,9 @@ import { getAppConfig } from '@/lib/env';
 import globalCss from '@/styles/globals.css';
 import EmbedFixedAgentClient from './agent-client';
 
+const scriptTag = document.querySelector<HTMLScriptElement>('script[data-lk-sandbox-id]');
+const sandboxIdAttribute = scriptTag?.dataset.lkSandboxId;
+
 const wrapper = document.createElement('div');
 wrapper.setAttribute('id', 'lk-embed-wrapper');
 document.body.appendChild(wrapper);
@@ -20,7 +23,7 @@ shadowRoot.appendChild(styleTag);
 const reactRoot = document.createElement('div');
 shadowRoot.appendChild(reactRoot);
 
-getAppConfig(window.location.origin)
+getAppConfig(window.location.origin, sandboxIdAttribute)
   .then((appConfig) => {
     const root = ReactDOM.createRoot(reactRoot);
     root.render(<EmbedFixedAgentClient appConfig={appConfig} />);

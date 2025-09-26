@@ -5,7 +5,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'motion/react';
 import { HandPointingIcon } from '@phosphor-icons/react';
 import { APP_CONFIG_DEFAULTS } from '@/app-config';
-import { THEME_STORAGE_KEY } from '@/lib/env';
+import { THEME_STORAGE_KEY, getSandboxId } from '@/lib/env';
 import type { ThemeMode } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import EmbedPopupAgentClient from './embed-popup/agent-client';
@@ -35,6 +35,8 @@ export default function Welcome() {
     const url = new URL('/popup', window.location.origin);
     return url.toString();
   }, []);
+
+  const embedSandboxId = useMemo(() => getSandboxId(window.location.origin), []);
 
   const handleClickIframe = () => {
     router.push(`${pathname}?tab=iframe`);
@@ -133,7 +135,9 @@ export default function Welcome() {
             <div>
               <h4 className="text-fg0 mb-1 font-semibold">Embed code</h4>
               <pre className="border-separator2 bg-bg2 overflow-auto rounded-md border px-2 py-1">
-                <code className="font-mono">{`<script src="${embedPopupUrl}"></script>`}</code>
+                <code className="font-mono">
+                  {`<script\n  src="${embedPopupUrl}"\n  data-lk-sandbox-id="${embedSandboxId}"\n></script>`}
+                </code>
               </pre>
               <p className="text-fg4 my-4 text-sm">
                 To apply local changes, run{' '}
