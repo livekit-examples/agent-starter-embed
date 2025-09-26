@@ -5,7 +5,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'motion/react';
 import { CheckIcon, CopyIcon, HandPointingIcon } from '@phosphor-icons/react';
 import { APP_CONFIG_DEFAULTS } from '@/app-config';
-import { THEME_STORAGE_KEY } from '@/lib/env';
+import { THEME_STORAGE_KEY, getSandboxId } from '@/lib/env';
 import type { ThemeMode } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import EmbedPopupAgentClient from './embed-popup/agent-client';
@@ -42,9 +42,11 @@ export default function Welcome() {
     return url.toString();
   }, []);
 
+  const embedSandboxId = useMemo(() => getSandboxId(window.location.origin), []);
+
   const popupEmbedCode = useMemo(
-    () => `<script\n  src="${popupEmbedUrl}"\n></script>`,
-    [popupEmbedUrl]
+    () => `<script\n  src="${popupEmbedUrl}"\n  data-lk-sandbox-id="${embedSandboxId}"\n></script>`,
+    [popupEmbedUrl, embedSandboxId]
   );
   const iframeEmbedCode = useMemo(() => {
     return `<iframe\n  src="${iframeEmbedUrl}"\n  style="width: 320px; height: 64px;"\n></iframe>`;
@@ -165,13 +167,8 @@ export default function Welcome() {
             <h3 className="sr-only text-lg font-semibold">Popup Style</h3>
             <div>
               <h4 className="text-fg0 mb-1 font-semibold">Embed code</h4>
-              <pre className="border-separator2 bg-bg2 relative overflow-auto rounded-md border px-2 py-1">
+              <pre className="border-separator2 bg-bg2 overflow-auto rounded-md border px-2 py-1">
                 <code className="font-mono">{popupEmbedCode}</code>
-                <div className="absolute top-0 right-0">
-                  <Button onClick={() => copyEmbedCode(popupEmbedCode)}>
-                    {copied ? <CheckIcon className="text-fgSuccess" /> : <CopyIcon />}
-                  </Button>
-                </div>
               </pre>
               <p className="text-fg4 my-4 text-sm">
                 To apply local changes, run{' '}
