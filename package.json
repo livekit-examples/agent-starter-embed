@@ -1,11 +1,11 @@
 {
-  "name": "agent-starter-app",
+  "name": "agent-starter-embed",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
     "build-embed-popup-script": "webpack",
-    "build": "next build",
+    "build": "next build && pnpm build-embed-popup-script",
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write .",
