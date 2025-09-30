@@ -11,7 +11,7 @@ This template is built with Next.js and is free for you to use or modify as you 
 ## Getting started
 
 > [!TIP]
-> If you'd like to try this application without modification, you can deploy an instance in just a few clicks with [LiveKit Cloud Sandbox](https://cloud.livekit.io/projects/p_/sandbox/templates/embed).
+> If you'd like to try this application without modification, you can deploy an instance in just a few clicks with [LiveKit Cloud Sandbox](https://cloud.livekit.io/projects/p_/sandbox/templates/agent-starter-embed).
 
 Run the following command to automatically clone this template.
 
