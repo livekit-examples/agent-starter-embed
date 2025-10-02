@@ -19,7 +19,7 @@ export default function Welcome() {
   const selectedTab = tabParam ? (tabParam === 'popup' ? 'popup' : 'iframe') : 'iframe';
   const [, forceUpdate] = useState(0);
   const theme = (localStorage.getItem(THEME_STORAGE_KEY) as ThemeMode) ?? 'dark';
-  const IS_SANDBOX_ENVIRONMENT = process.env.NEXT_PUBLIC_CONN_DETAILS_ENDPOINT !== undefined;
+  const IS_SANDBOX_ENVIRONMENT = process.env.NODE_ENV === 'production';
 
   const [copied, setCopied] = useState(false);
   const copyEmbedCode = useCallback((embedCode: string) => {

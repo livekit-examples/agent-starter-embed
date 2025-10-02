@@ -16,7 +16,10 @@ module.exports = {
   },
   plugins: [
     // NOTE: the below doesn't whitelist, see https://github.com/mrsteele/dotenv-webpack/issues/41
-    new Dotenv(),
+    new Dotenv({
+      systemvars: true,
+      path: '.env.local',
+    }),
   ],
   module: {
     rules: [
