@@ -1,9 +1,15 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark {
+  &:where(.dark *),
+  &:where(:host(.dark) *) {
+    @slot;
+  }
+}
 
-:root {
+:root,
+:host {
   --fg0: #000000;
   --fg1: #3b3b3b;
   --fg2: #4d4d4d;
@@ -65,7 +71,8 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
-.dark {
+.dark,
+:host(.dark) {
   --fg0: #ffffff;
   --fg1: #cccccc;
   --fg2: #b2b2b2;

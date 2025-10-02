@@ -53,7 +53,7 @@ export default function Welcome() {
   }, [iframeEmbedUrl]);
 
   const popupTestUrl = useMemo(() => {
-    const url = new URL('/popup', window.location.origin);
+    const url = new URL('/test/popup', window.location.origin);
     return url.toString();
   }, []);
 
@@ -191,7 +191,7 @@ export default function Welcome() {
                   <p className="text-fg4 overflow-hidden text-sm text-ellipsis whitespace-nowrap">
                     Test your latest build at{' '}
                     <a
-                      href="/popup"
+                      href={popupTestUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="underline"
