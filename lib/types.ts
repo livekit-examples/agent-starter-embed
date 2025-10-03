@@ -15,9 +15,6 @@ export interface AppConfig {
   supportsVideoInput: boolean;
   supportsScreenShare: boolean;
   isPreConnectBufferEnabled: boolean;
-
-  accent?: string;
-  accentDark?: string;
 }
 
 export interface SandboxConfig {

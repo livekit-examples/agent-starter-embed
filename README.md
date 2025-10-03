@@ -85,16 +85,10 @@ This starter is designed to be flexible so you can adapt it to your specific age
 
 ```ts
 export const APP_CONFIG_DEFAULTS = {
-  sandboxId: undefined,
-  agentName: undefined,
-
   supportsChatInput: true,
   supportsVideoInput: true,
   supportsScreenShare: true,
   isPreConnectBufferEnabled: true,
-
-  accent: '#002cf2',
-  accentDark: '#1fd5f9',
 };
 ```
 
