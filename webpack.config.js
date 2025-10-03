@@ -3,6 +3,7 @@ const path = require('path');
 const Dotenv = require('dotenv-webpack');
 
 module.exports = {
+  mode: 'production',
   entry: './components/embed-popup/standalone-bundle-root.tsx', // Input file
   output: {
     path: path.resolve(__dirname, 'public'),
@@ -15,7 +16,10 @@ module.exports = {
   },
   plugins: [
     // NOTE: the below doesn't whitelist, see https://github.com/mrsteele/dotenv-webpack/issues/41
-    new Dotenv(),
+    new Dotenv({
+      systemvars: true,
+      path: '.env.local',
+    }),
   ],
   module: {
     rules: [

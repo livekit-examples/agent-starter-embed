@@ -10,7 +10,6 @@ import type { ThemeMode } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import EmbedPopupAgentClient from './embed-popup/agent-client';
 import { ThemeToggle } from './theme-toggle';
-import { Button } from './ui/button';
 
 export default function Welcome() {
   const router = useRouter();
@@ -20,6 +19,7 @@ export default function Welcome() {
   const selectedTab = tabParam ? (tabParam === 'popup' ? 'popup' : 'iframe') : 'iframe';
   const [, forceUpdate] = useState(0);
   const theme = (localStorage.getItem(THEME_STORAGE_KEY) as ThemeMode) ?? 'dark';
+  const IS_SANDBOX_ENVIRONMENT = process.env.NODE_ENV === 'production';
 
   const [copied, setCopied] = useState(false);
   const copyEmbedCode = useCallback((embedCode: string) => {
@@ -53,7 +53,7 @@ export default function Welcome() {
   }, [iframeEmbedUrl]);
 
   const popupTestUrl = useMemo(() => {
-    const url = new URL('/popup', window.location.origin);
+    const url = new URL('/test/popup', window.location.origin);
     return url.toString();
   }, []);
 
@@ -123,7 +123,7 @@ export default function Welcome() {
             <h3 className="sr-only text-lg font-semibold">IFrame Style</h3>
             <div>
               <h4 className="text-fg0 mb-1 font-semibold">Embed code</h4>
-              <pre className="border-separator2 bg-bg2 relative overflow-auto rounded-md border px-2 py-1">
+              <pre className="border-separator2 bg-bg2 scrollbar-custom relative overflow-auto rounded-md border px-2 py-1">
                 <code className="font-mono">
                   {iframeEmbedCode.split(iframeEmbedUrl).map((stringPart, index) => {
                     if (index === 0) {
@@ -146,9 +146,12 @@ export default function Welcome() {
                   })}
                 </code>
                 <div className="absolute top-0 right-0">
-                  <Button onClick={() => copyEmbedCode(iframeEmbedCode)}>
-                    {copied ? <CheckIcon className="text-fgSuccess" /> : <CopyIcon />}
-                  </Button>
+                  <button
+                    onClick={() => copyEmbedCode(iframeEmbedCode)}
+                    className="cursor-pointer p-2 opacity-50 transition-opacity hover:opacity-100"
+                  >
+                    {copied ? <CheckIcon weight="bold" className="text-fgSuccess" /> : <CopyIcon />}
+                  </button>
                 </div>
               </pre>
             </div>
@@ -167,18 +170,38 @@ export default function Welcome() {
             <h3 className="sr-only text-lg font-semibold">Popup Style</h3>
             <div>
               <h4 className="text-fg0 mb-1 font-semibold">Embed code</h4>
-              <pre className="border-separator2 bg-bg2 overflow-auto rounded-md border px-2 py-1">
+              <pre className="order-separator2 bg-bg2 scrollbar-custom relative overflow-auto rounded-md border px-2 py-1">
                 <code className="font-mono">{popupEmbedCode}</code>
+                <div className="absolute top-0 right-0">
+                  <button
+                    onClick={() => copyEmbedCode(popupEmbedCode)}
+                    className="cursor-pointer p-2 opacity-50 transition-opacity hover:opacity-100"
+                  >
+                    {copied ? <CheckIcon weight="bold" className="text-fgSuccess" /> : <CopyIcon />}
+                  </button>
+                </div>
               </pre>
-              <p className="text-fg4 my-4 text-sm">
-                To apply local changes, run{' '}
-                <code className="text-fg0">pnpm build-embed-popup-script</code>.<br />
-                Test your latest build at{' '}
-                <a href="/popup" target="_blank" rel="noopener noreferrer" className="underline">
-                  {popupTestUrl}
-                </a>
-                .
-              </p>
+              {/* hide build/test instructions in sandbox environment on Vercel */}
+              {!IS_SANDBOX_ENVIRONMENT && (
+                <div className="my-4">
+                  <p className="text-fg4 overflow-hidden text-sm text-ellipsis whitespace-nowrap">
+                    To apply local changes, run{' '}
+                    <code className="text-fg0">pnpm build-embed-popup-script</code>.
+                  </p>
+                  <p className="text-fg4 overflow-hidden text-sm text-ellipsis whitespace-nowrap">
+                    Test your latest build at{' '}
+                    <a
+                      href={popupTestUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline"
+                    >
+                      {popupTestUrl}
+                    </a>
+                    .
+                  </p>
+                </div>
+              )}
             </div>
             <div className="flex justify-center pt-8">
               <div className="text-fgAccent flex gap-1">

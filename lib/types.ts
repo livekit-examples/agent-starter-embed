@@ -8,20 +8,13 @@ export interface CombinedTranscription extends TranscriptionSegment {
 export type ThemeMode = 'dark' | 'light' | 'system';
 
 export interface AppConfig {
-  pageTitle: string;
-  pageDescription: string;
-  companyName: string;
+  sandboxId?: string;
+  agentName?: string;
 
   supportsChatInput: boolean;
   supportsVideoInput: boolean;
   supportsScreenShare: boolean;
   isPreConnectBufferEnabled: boolean;
-
-  logo: string;
-  startButtonText: string;
-  accent?: string;
-  logoDark?: string;
-  accentDark?: string;
 }
 
 export interface SandboxConfig {

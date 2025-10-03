@@ -1,38 +1,48 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Room, RoomEvent } from 'livekit-client';
 import { motion } from 'motion/react';
 import { RoomAudioRenderer, RoomContext, StartAudio } from '@livekit/components-react';
-import { XIcon } from '@phosphor-icons/react';
+import { ErrorMessage } from '@/components/embed-popup/error-message';
 import { PopupView } from '@/components/embed-popup/popup-view';
 import { Trigger } from '@/components/embed-popup/trigger';
-import { Button } from '@/components/ui/button';
 import useConnectionDetails from '@/hooks/use-connection-details';
 import { type AppConfig, EmbedErrorDetails } from '@/lib/types';
-import { cn } from '@/lib/utils';
+
+const PopupViewMotion = motion.create(PopupView);
 
 export type EmbedFixedAgentClientProps = {
   appConfig: AppConfig;
 };
 
-function EmbedFixedAgentClient({ appConfig }: EmbedFixedAgentClientProps) {
+function AgentClient({ appConfig }: EmbedFixedAgentClientProps) {
+  const isAnimating = useRef(false);
   const room = useMemo(() => new Room(), []);
   const [popupOpen, setPopupOpen] = useState(false);
-  const [currentError, setCurrentError] = useState<EmbedErrorDetails | null>(null);
-  const { connectionDetails, refreshConnectionDetails } = useConnectionDetails();
+  const [error, setError] = useState<EmbedErrorDetails | null>(null);
+  const { connectionDetails, refreshConnectionDetails, existingOrRefreshConnectionDetails } =
+    useConnectionDetails(appConfig);
 
   const handleTogglePopup = () => {
-    setPopupOpen((open) => !open);
-
-    if (currentError) {
-      handleDismissError();
+    if (isAnimating.current) {
+      // prevent re-opening before room has disconnected
+      return;
     }
+
+    setError(null);
+    setPopupOpen((open) => !open);
   };
 
-  const handleDismissError = () => {
-    room.disconnect();
-    setCurrentError(null);
+  const handlePanelAnimationStart = () => {
+    isAnimating.current = true;
+  };
+
+  const handlePanelAnimationComplete = () => {
+    isAnimating.current = false;
+    if (!popupOpen && room.state !== 'disconnected') {
+      room.disconnect();
+    }
   };
 
   useEffect(() => {
@@ -41,7 +51,7 @@ function EmbedFixedAgentClient({ appConfig }: EmbedFixedAgentClientProps) {
       refreshConnectionDetails();
     };
     const onMediaDevicesError = (error: Error) => {
-      setCurrentError({
+      setError({
         title: 'Encountered an error with your media devices',
         description: `${error.name}: ${error.message}`,
       });
@@ -58,42 +68,51 @@ function EmbedFixedAgentClient({ appConfig }: EmbedFixedAgentClientProps) {
     if (!popupOpen) {
       return;
     }
-    if (room.state !== 'disconnected') {
+    if (!connectionDetails) {
+      setError({
+        title: 'Error fetching connection details',
+        description: 'Please try again later',
+      });
       return;
     }
-    if (!connectionDetails) {
+    if (room.state !== 'disconnected') {
       return;
     }
 
     const connect = async () => {
-      try {
-        await room.connect(connectionDetails.serverUrl, connectionDetails.participantToken);
-        await room.localParticipant.setMicrophoneEnabled(true, undefined, {
+      Promise.all([
+        room.localParticipant.setMicrophoneEnabled(true, undefined, {
           preConnectBuffer: appConfig.isPreConnectBufferEnabled,
-        });
-      } catch (error: unknown) {
+        }),
+        existingOrRefreshConnectionDetails().then((connectionDetails) =>
+          room.connect(connectionDetails.serverUrl, connectionDetails.participantToken)
+        ),
+      ]).catch((error) => {
         if (error instanceof Error) {
           console.error('Error connecting to agent:', error);
-          setCurrentError({
+          setError({
             title: 'There was an error connecting to the agent',
             description: `${error.name}: ${error.message}`,
           });
         }
-      }
+      });
     };
-    connect();
 
-    return () => {
-      room.disconnect();
-    };
-  }, [room, popupOpen, connectionDetails, appConfig.isPreConnectBufferEnabled]);
+    connect();
+  }, [
+    room,
+    popupOpen,
+    connectionDetails,
+    existingOrRefreshConnectionDetails,
+    appConfig.isPreConnectBufferEnabled,
+  ]);
 
   return (
     <RoomContext.Provider value={room}>
       <RoomAudioRenderer />
       <StartAudio label="Start Audio" />
 
-      <Trigger error={!!currentError} popupOpen={popupOpen} onToggle={handleTogglePopup} />
+      <Trigger error={error} popupOpen={popupOpen} onToggle={handleTogglePopup} />
 
       <motion.div
         inert={!popupOpen}
@@ -107,53 +126,31 @@ function EmbedFixedAgentClient({ appConfig }: EmbedFixedAgentClientProps) {
         }}
         transition={{
           type: 'spring',
-          duration: 1,
           bounce: 0,
+          duration: popupOpen ? 1 : 0.2,
         }}
-        className="fixed right-0 bottom-20 z-50 w-full px-4"
+        onAnimationStart={handlePanelAnimationStart}
+        onAnimationComplete={handlePanelAnimationComplete}
+        className="fixed right-4 bottom-20 left-4 z-50 md:left-auto"
       >
-        <div className="bg-bg2 dark:bg-bg1 border-separator1 ml-auto h-[480px] w-full rounded-[28px] border drop-shadow-md md:max-w-[360px]">
+        <div className="bg-bg1 dark:bg-bg2 border-separator1 dark:border-separator2 ml-auto h-[480px] w-full rounded-[28px] border border-solid drop-shadow-md md:w-[360px]">
           <div className="relative h-full w-full">
-            <div
-              inert={currentError === null}
-              className={cn(
-                'absolute inset-0 flex h-full w-full flex-col items-center justify-center gap-5 transition-opacity',
-                currentError === null ? 'opacity-0' : 'opacity-100'
-              )}
-            >
-              <div className="pl-3">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/lk-logo.svg" alt="LiveKit Logo" className="block size-6 dark:hidden" />
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/lk-logo-dark.svg"
-                  alt="LiveKit Logo"
-                  className="hidden size-6 dark:block"
-                />
-              </div>
-
-              <div className="flex w-full flex-col justify-center gap-1 overflow-auto px-4 text-center">
-                <span className="text-sm font-medium">{currentError?.title}</span>
-                <span className="text-xs">{currentError?.description}</span>
-              </div>
-
-              <Button variant="secondary" onClick={handleDismissError}>
-                <XIcon /> Dismiss
-              </Button>
-            </div>
-            <div
-              inert={currentError !== null}
-              className={cn(
-                'absolute inset-0 transition-opacity',
-                currentError === null ? 'opacity-100' : 'opacity-0'
-              )}
-            >
-              <PopupView
+            <ErrorMessage error={error} />
+            {!error && (
+              <PopupViewMotion
+                appConfig={appConfig}
+                initial={{ opacity: 1 }}
+                animate={{ opacity: error === null ? 1 : 0 }}
+                transition={{
+                  type: 'linear',
+                  duration: 0.2,
+                }}
                 disabled={!popupOpen}
                 sessionStarted={popupOpen}
-                onDisplayError={setCurrentError}
+                onEmbedError={setError}
+                className="absolute inset-0"
               />
-            </div>
+            )}
           </div>
         </div>
       </motion.div>
@@ -161,4 +158,4 @@ function EmbedFixedAgentClient({ appConfig }: EmbedFixedAgentClientProps) {
   );
 }
 
-export default EmbedFixedAgentClient;
+export default AgentClient;

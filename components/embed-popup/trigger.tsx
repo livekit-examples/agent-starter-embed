@@ -1,21 +1,24 @@
 import { AnimatePresence, motion } from 'motion/react';
 import { useVoiceAssistant } from '@livekit/components-react';
 import { PhoneDisconnectIcon, XIcon } from '@phosphor-icons/react';
+import { EmbedErrorDetails } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 
 const AnimatedButton = motion.create(Button);
 
 interface TriggerProps {
-  error: boolean;
+  error: EmbedErrorDetails | null;
   popupOpen: boolean;
   onToggle: () => void;
 }
 
-export function Trigger({ error = false, popupOpen, onToggle }: TriggerProps) {
+export function Trigger({ error = null, popupOpen, onToggle }: TriggerProps) {
   const { state: agentState } = useVoiceAssistant();
 
-  const isAgentConnecting = agentState === 'connecting' || agentState === 'initializing';
+  const isAgentConnecting =
+    popupOpen && (agentState === 'connecting' || agentState === 'initializing');
+
   const isAgentConnected =
     popupOpen &&
     agentState !== 'disconnected' &&
@@ -50,39 +53,24 @@ export function Trigger({ error = false, popupOpen, onToggle }: TriggerProps) {
         <motion.div
           className={cn(
             'absolute inset-0 z-10 rounded-full transition-colors',
+            !popupOpen && 'bg-fgAccent',
             !error &&
               isAgentConnecting &&
               'bg-fgAccent/30 animate-spin [background-image:conic-gradient(from_0deg,transparent_0%,transparent_30%,var(--color-fgAccent)_50%,transparent_70%,transparent_100%)]',
-            !error && agentState === 'disconnected' && 'bg-fgAccent',
-            (error || isAgentConnected) && 'bg-destructive-foreground'
+            (isAgentConnected || (error && popupOpen)) && 'bg-destructive-foreground'
           )}
         />
         {/* icon */}
         <div
           className={cn(
             'relative z-20 grid size-11 place-items-center rounded-full transition-colors',
+            !popupOpen && 'bg-fgAccent',
             !error && isAgentConnecting && 'bg-bg1',
-            !error && agentState === 'disconnected' && 'bg-fgAccent',
-            (error || isAgentConnected) && 'bg-destructive'
+            (isAgentConnected || (error && popupOpen)) && 'bg-destructive'
           )}
         >
           <AnimatePresence>
-            {!error && isAgentConnected && (
-              <motion.div
-                key="disconnect"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: popupOpen ? -20 : 20 }}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-              >
-                <PhoneDisconnectIcon
-                  size={20}
-                  weight="bold"
-                  className="text-destructive-foreground size-5"
-                />
-              </motion.div>
-            )}
-            {!error && agentState === 'disconnected' && (
+            {!popupOpen && (
               <motion.div
                 key="lk-logo"
                 initial={{ opacity: 0, y: -20 }}
@@ -100,7 +88,7 @@ export function Trigger({ error = false, popupOpen, onToggle }: TriggerProps) {
                 />
               </motion.div>
             )}
-            {(error || isAgentConnecting) && (
+            {(isAgentConnecting || (error && popupOpen)) && (
               <motion.div
                 key="dismiss"
                 initial={{ opacity: 0, y: 20 }}
@@ -112,6 +100,21 @@ export function Trigger({ error = false, popupOpen, onToggle }: TriggerProps) {
                   size={20}
                   weight="bold"
                   className={cn('text-fg0 size-5', error && 'text-destructive-foreground')}
+                />
+              </motion.div>
+            )}
+            {!error && isAgentConnected && (
+              <motion.div
+                key="disconnect"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: popupOpen ? -20 : 20 }}
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+              >
+                <PhoneDisconnectIcon
+                  size={20}
+                  weight="bold"
+                  className="text-destructive-foreground size-5"
                 />
               </motion.div>
             )}
