@@ -1,23 +1,23 @@
-import React from 'react';
-import { motion } from 'motion/react';
-import { VideoTrack } from '@livekit/components-react';
+import { type TrackReference, VideoTrack } from '@livekit/components-react';
 import { cn } from '@/lib/utils';
 
-const MotionVideoTrack = motion.create(VideoTrack);
+interface AgentAudioTileProps {
+  videoTrack: TrackReference;
+  className?: string;
+}
 
 export const VideoTile = ({
-  trackRef,
+  videoTrack,
   className,
   ref,
-}: React.ComponentProps<'div'> & React.ComponentProps<typeof VideoTrack>) => {
+}: React.ComponentProps<'video'> & AgentAudioTileProps) => {
   return (
-    <div ref={ref} className={cn('bg-muted overflow-hidden rounded-md', className)}>
-      <MotionVideoTrack
-        trackRef={trackRef}
-        width={trackRef?.publication.dimensions?.width ?? 0}
-        height={trackRef?.publication.dimensions?.height ?? 0}
-        className={cn('h-full w-auto')}
-      />
-    </div>
+    <VideoTrack
+      ref={ref}
+      trackRef={videoTrack}
+      width={videoTrack?.publication.dimensions?.width ?? 0}
+      height={videoTrack?.publication.dimensions?.height ?? 0}
+      className={cn(className)}
+    />
   );
 };
