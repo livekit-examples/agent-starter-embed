@@ -56,12 +56,12 @@ export function Transcript({
     <div
       ref={handleRef}
       className={cn(
-        'scrollbar-on-hover flex grow flex-col overflow-x-hidden overflow-y-scroll py-2 pr-3 pl-1',
+        'scrollbar-on-hover flex grow flex-col overflow-x-hidden overflow-y-scroll py-3 pr-3 pl-1',
         '[mask-image:linear-gradient(0deg,rgba(0,0,0,0.2)_0%,rgba(0,0,0,1)_5%,rgba(0,0,0,1)_95%,rgba(0,0,0,0)_100%)]',
         className
       )}
     >
-      <div className="flex flex-1 flex-col justify-end gap-2 pt-12">
+      <div className="flex flex-1 flex-col justify-end gap-2 pt-16">
         <AnimatePresence>
           {messages.map((message) => (
             <ChatEntryMotion
