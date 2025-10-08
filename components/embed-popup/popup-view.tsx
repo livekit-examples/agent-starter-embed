@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import {
   type AgentState,
   type TrackReference,
+  VideoTrack,
   useLocalParticipant,
   useRoomContext,
   useTracks,
@@ -14,7 +15,6 @@ import {
 import { ActionBar } from '@/components/embed-popup/action-bar';
 import { AudioVisualizer } from '@/components/embed-popup/audio-visualizer';
 import { Transcript } from '@/components/embed-popup/transcript';
-import { VideoTile } from '@/components/livekit/video-tile';
 import useChatAndTranscription from '@/hooks/use-chat-and-transcription';
 import { useDebugMode } from '@/hooks/useDebug';
 import type { AppConfig, EmbedErrorDetails } from '@/lib/types';
@@ -191,8 +191,10 @@ export const PopupView = ({
               }}
               className="border-separator1 dark:border-separator2 pointer-events-none absolute inset-1 drop-shadow-lg/20"
             >
-              <VideoTile
-                videoTrack={agentVideoTrack}
+              <VideoTrack
+                trackRef={agentVideoTrack}
+                width={agentVideoTrack?.publication.dimensions?.width ?? 0}
+                height={agentVideoTrack?.publication.dimensions?.height ?? 0}
                 className="h-full rounded-[24px] bg-black object-cover"
               />
             </motion.div>
@@ -220,8 +222,10 @@ export const PopupView = ({
               transition={TILE_TRANSITION}
               className="border-separator1 dark:border-separator2 pointer-events-none absolute drop-shadow-lg/20"
             >
-              <VideoTile
-                videoTrack={agentVideoTrack}
+              <VideoTrack
+                trackRef={agentVideoTrack}
+                width={agentVideoTrack?.publication.dimensions?.width ?? 0}
+                height={agentVideoTrack?.publication.dimensions?.height ?? 0}
                 className="aspect-square w-[70px] rounded-md bg-black object-cover"
               />
             </motion.div>
@@ -254,8 +258,10 @@ export const PopupView = ({
               transition={TILE_TRANSITION}
               className="border-separator1 dark:border-separator2 pointer-events-none absolute drop-shadow-lg/20"
             >
-              <VideoTile
-                videoTrack={cameraTrack || screenShareTrack}
+              <VideoTrack
+                trackRef={cameraTrack || screenShareTrack}
+                width={(cameraTrack || screenShareTrack)?.publication.dimensions?.width ?? 0}
+                height={(cameraTrack || screenShareTrack)?.publication.dimensions?.height ?? 0}
                 className="aspect-square w-[70px] rounded-md bg-black object-cover"
               />
             </motion.div>
