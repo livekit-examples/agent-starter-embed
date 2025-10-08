@@ -14,7 +14,7 @@ import {
 import { ActionBar } from '@/components/embed-popup/action-bar';
 import { AudioVisualizer } from '@/components/embed-popup/audio-visualizer';
 import { Transcript } from '@/components/embed-popup/transcript';
-import { AvatarTile } from '@/components/livekit/avatar-tile';
+import { VideoTile } from '@/components/livekit/video-tile';
 import useChatAndTranscription from '@/hooks/use-chat-and-transcription';
 import { useDebugMode } from '@/hooks/useDebug';
 import type { AppConfig, EmbedErrorDetails } from '@/lib/types';
@@ -109,8 +109,25 @@ export const PopupView = ({
 
   return (
     <div ref={ref} inert={disabled} className="flex h-full w-full flex-col overflow-hidden">
-      <div className="relative flex h-full shrink-1 grow-1 flex-col py-1">
-        <div className="absolute top-0 left-0 h-full w-1/2" />
+      <div className="relative flex h-full shrink-1 grow-1 flex-col">
+        {/* Transcript */}
+        <TranscriptMotion
+          initial={{
+            y: 10,
+            opacity: 0,
+          }}
+          animate={{
+            y: chatOpen ? 0 : 10,
+            opacity: chatOpen ? 1 : 0,
+          }}
+          transition={{
+            type: 'spring',
+            duration: 0.5,
+            bounce: 0,
+          }}
+          messages={messages}
+        />
+
         {/* Audio Visualizer */}
         <AnimatePresence>
           {!agentVideoTrack && (
@@ -133,7 +150,7 @@ export const PopupView = ({
               }}
               transition={TILE_TRANSITION}
               className={cn(
-                'bg-bg1 dark:bg-bg2 pointer-events-none absolute z-10 flex aspect-square w-64 items-center justify-center rounded-2xl border border-transparent transition-colors',
+                'bg-bg1 dark:bg-bg2 pointer-events-none absolute flex aspect-square w-64 items-center justify-center rounded-2xl border border-transparent transition-colors',
                 chatOpen && 'border-separator1 dark:border-separator2 drop-shadow-2xl'
               )}
             >
@@ -172,9 +189,12 @@ export const PopupView = ({
                   duration: 1,
                 },
               }}
-              className="pointer-events-none absolute inset-1 z-10 overflow-hidden rounded-[24px]"
+              className="border-separator1 dark:border-separator2 pointer-events-none absolute inset-1 drop-shadow-lg/20"
             >
-              <AvatarTile videoTrack={agentVideoTrack} className="h-full bg-black object-cover" />
+              <VideoTile
+                videoTrack={agentVideoTrack}
+                className="h-full rounded-[24px] bg-black object-cover"
+              />
             </motion.div>
           )}
         </AnimatePresence>
@@ -198,11 +218,11 @@ export const PopupView = ({
                 left: isCameraEnabled || isScreenShareEnabled ? '37.5%' : '50%',
               }}
               transition={TILE_TRANSITION}
-              className="pointer-events-none absolute z-10 overflow-hidden rounded-md"
+              className="border-separator1 dark:border-separator2 pointer-events-none absolute drop-shadow-lg/20"
             >
-              <AvatarTile
+              <VideoTile
                 videoTrack={agentVideoTrack}
-                className="aspect-square w-[70px] bg-black object-cover"
+                className="aspect-square w-[70px] rounded-md bg-black object-cover"
               />
             </motion.div>
           )}
@@ -218,7 +238,6 @@ export const PopupView = ({
                 opacity: 0,
                 right: '12px',
                 top: '346px',
-
                 transformOrigin: 'center bottom',
               }}
               animate={{
@@ -233,37 +252,25 @@ export const PopupView = ({
                 opacity: 0,
               }}
               transition={TILE_TRANSITION}
-              className="pointer-events-none absolute z-10 overflow-hidden rounded-md"
+              className="border-separator1 dark:border-separator2 pointer-events-none absolute drop-shadow-lg/20"
             >
-              <AvatarTile
+              <VideoTile
                 videoTrack={cameraTrack || screenShareTrack}
-                className="aspect-square w-[70px] bg-black object-cover"
+                className="aspect-square w-[70px] rounded-md bg-black object-cover"
               />
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Transcript */}
-        <TranscriptMotion
-          initial={{
-            y: 10,
-            opacity: 0,
-          }}
-          animate={{
-            y: chatOpen ? 0 : 10,
-            opacity: chatOpen ? 1 : 0,
-          }}
-          transition={{
-            type: 'spring',
-            duration: 0.5,
-            bounce: 0,
-          }}
-          messages={messages}
-          className="relative z-30"
-        />
-
         {/* Action Bar */}
         <ActionBar
+          controls={{
+            leave: true,
+            chat: true,
+            microphone: true,
+            camera: true,
+            screenShare: true,
+          }}
           onSendMessage={onSendMessage}
           capabilities={capabilities}
           onChatOpenChange={setChatOpen}
