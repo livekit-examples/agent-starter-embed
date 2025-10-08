@@ -9,11 +9,11 @@ interface AgentAudioTileProps {
 export const VideoTile = ({
   videoTrack,
   className,
-  ref,
-}: React.ComponentProps<'video'> & AgentAudioTileProps) => {
+  ...props
+}: AgentAudioTileProps & React.ComponentProps<'video'>) => {
   return (
     <VideoTrack
-      ref={ref}
+      {...props}
       trackRef={videoTrack}
       width={videoTrack?.publication.dimensions?.width ?? 0}
       height={videoTrack?.publication.dimensions?.height ?? 0}

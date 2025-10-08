@@ -263,18 +263,25 @@ export const PopupView = ({
         </AnimatePresence>
 
         {/* Action Bar */}
-        <ActionBar
-          controls={{
-            leave: true,
-            chat: true,
-            microphone: true,
-            camera: true,
-            screenShare: true,
+        <motion.div
+          initial={{
+            opacity: 0,
+            translateY: 8,
           }}
-          onSendMessage={onSendMessage}
-          capabilities={capabilities}
-          onChatOpenChange={setChatOpen}
-        />
+          animate={{
+            opacity: sessionStarted ? 1 : 0,
+            translateY: sessionStarted ? 0 : 8,
+          }}
+          transition={{
+            delay: 0.5,
+          }}
+        >
+          <ActionBar
+            capabilities={capabilities}
+            onSendMessage={onSendMessage}
+            onChatOpenChange={setChatOpen}
+          />
+        </motion.div>
       </div>
     </div>
   );
