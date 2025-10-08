@@ -85,7 +85,7 @@ export function ActionBar({
     <div
       aria-label="Voice assistant controls"
       className={cn(
-        'bg-background border-separator1 dark:border-separator1 relative z-20 mx-2 mb-1 flex flex-col rounded-[24px] border p-1 drop-shadow-md',
+        'bg-background border-separator1 dark:border-separator1 relative z-20 mx-2 mb-2 flex flex-col rounded-[24px] border p-1 drop-shadow-md',
         className
       )}
       {...props}
