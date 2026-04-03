@@ -38,8 +38,9 @@ export const getAppConfig = cache(
           if (entry === null) continue;
           if (
             key in config &&
-            typeof config[key as keyof AppConfig] === entry.type &&
-            typeof config[key as keyof AppConfig] === typeof entry.value
+            (config[key as keyof AppConfig] === undefined ||
+              typeof config[key as keyof AppConfig] === entry.type) &&
+            typeof entry.value === entry.type
           ) {
             // @ts-expect-error I'm not sure quite how to appease TypeScript, but we've thoroughly checked types above
             config[key as keyof AppConfig] = entry.value as AppConfig[keyof AppConfig];
