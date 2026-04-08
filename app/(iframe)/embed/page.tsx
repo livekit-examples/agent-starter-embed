@@ -6,7 +6,8 @@ import { getAppConfig, getOrigin } from '@/lib/env';
 export default async function Embed() {
   const hdrs = await headers();
   const origin = getOrigin(hdrs);
-  const appConfig = await getAppConfig(origin);
+  const sandboxId = hdrs.get('x-sandbox-id');
+  const appConfig = await getAppConfig(origin, sandboxId ?? undefined);
 
   return (
     <>
