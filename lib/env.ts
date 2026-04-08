@@ -15,7 +15,9 @@ export function getOrigin(headers: Headers): string {
 }
 
 export function getSandboxId(origin: string) {
-  return SANDBOX_ID ?? origin.split('.')[0];
+  if (SANDBOX_ID) return SANDBOX_ID;
+  const host = origin.replace(/^https?:\/\//, '');
+  return host.split('.')[0];
 }
 
 // https://react.dev/reference/react/cache#caveats
