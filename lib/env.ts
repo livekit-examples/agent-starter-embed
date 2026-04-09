@@ -15,7 +15,9 @@ export function getOrigin(headers: Headers): string {
 }
 
 export function getSandboxId(origin: string) {
-  return SANDBOX_ID ?? origin.split('.')[0];
+  if (SANDBOX_ID) return SANDBOX_ID;
+  const host = origin.replace(/^https?:\/\//, '');
+  return host.split('.')[0];
 }
 
 // https://react.dev/reference/react/cache#caveats
@@ -32,7 +34,7 @@ export const getAppConfig = cache(
         });
 
         const remoteConfig: SandboxConfig = await response.json();
-        const config: AppConfig = { ...APP_CONFIG_DEFAULTS };
+        const config: AppConfig = { ...APP_CONFIG_DEFAULTS, sandboxId };
 
         for (const [key, entry] of Object.entries(remoteConfig)) {
           if (entry === null) continue;
