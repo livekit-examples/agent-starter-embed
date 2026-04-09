@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'motion/react';
 import { useVoiceAssistant } from '@livekit/components-react';
 import { PhoneDisconnectIcon, XIcon } from '@phosphor-icons/react';
+import type { AppConfig } from '@/lib/types';
 import { EmbedErrorDetails } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
@@ -8,12 +9,13 @@ import { Button } from '../ui/button';
 const AnimatedButton = motion.create(Button);
 
 interface TriggerProps {
+  appConfig: AppConfig;
   error: EmbedErrorDetails | null;
   popupOpen: boolean;
   onToggle: () => void;
 }
 
-export function Trigger({ error = null, popupOpen, onToggle }: TriggerProps) {
+export function Trigger({ appConfig, error = null, popupOpen, onToggle }: TriggerProps) {
   const { state: agentState } = useVoiceAssistant();
 
   const isAgentConnecting =
@@ -82,7 +84,7 @@ export function Trigger({ error = null, popupOpen, onToggle }: TriggerProps) {
                   className="bg-bg1 size-5"
                   // webpack build throws if I use custom tailwind classes to achive this
                   style={{
-                    maskImage: 'url(/lk-logo.svg)',
+                    maskImage: `url(${appConfig.logo ?? '/lk-logo.svg'})`,
                     maskSize: 'contain',
                   }}
                 />
