@@ -13,9 +13,9 @@ export const WelcomeView = ({
   onStartCall,
   ref,
 }: React.ComponentProps<'div'> & WelcomeViewProps) => {
-  const logo = appConfig.logo ?? '/lk-logo.svg';
-  const logoDark = appConfig.logoDark ?? '/lk-logo-dark.svg';
-  const companyName = appConfig.companyName ?? 'LiveKit';
+  const logo = appConfig.logo || '/lk-logo.svg';
+  const logoDark = appConfig.logoDark || '/lk-logo-dark.svg';
+  const companyName = appConfig.companyName || 'LiveKit';
 
   return (
     <div ref={ref} inert={disabled} className="absolute inset-0">
@@ -28,7 +28,7 @@ export const WelcomeView = ({
         </div>
 
         <Button variant="primary" size="lg" onClick={onStartCall} className="w-48 font-mono">
-          {appConfig.startButtonText ?? 'Chat with Agent'}
+          {appConfig.startButtonText || 'Chat with Agent'}
         </Button>
       </div>
     </div>

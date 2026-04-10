@@ -8,9 +8,9 @@ interface ErrorMessageProps {
 }
 
 export function ErrorMessage({ appConfig, error }: ErrorMessageProps) {
-  const logo = appConfig.logo ?? '/lk-logo.svg';
-  const logoDark = appConfig.logoDark ?? '/lk-logo-dark.svg';
-  const companyName = appConfig.companyName ?? 'LiveKit';
+  const logo = appConfig.logo || '/lk-logo.svg';
+  const logoDark = appConfig.logoDark || '/lk-logo-dark.svg';
+  const companyName = appConfig.companyName || 'LiveKit';
 
   return (
     <div
