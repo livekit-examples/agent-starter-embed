@@ -9,8 +9,8 @@ export const APP_CONFIG_DEFAULTS: AppConfig = {
   isPreConnectBufferEnabled: true,
   startButtonText: 'Chat with Agent',
   companyName: 'LiveKit',
-  accent: '#1fd5f9',
-  accentDark: '#002cf2',
+  accent: '#002cf2',
+  accentDark: '#1fd5f9',
   logo: '/lk-logo.svg',
   logoDark: '/lk-logo-dark.svg',
 };

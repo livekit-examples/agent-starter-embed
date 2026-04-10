@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom/client';
 import { getAppConfig } from '@/lib/env';
-import { getStyles } from '@/lib/styles';
+import { getShadowStyles } from '@/lib/styles';
 import globalCss from '@/styles/globals.css';
 import EmbedFixedAgentClient from './agent-client';
 
@@ -28,7 +28,7 @@ if (sandboxIdAttribute) {
   getAppConfig(window.location.origin, sandboxIdAttribute)
     .then((appConfig) => {
       // Inject dynamic accent color overrides into the shadow root
-      const dynamicStyles = getStyles(appConfig);
+      const dynamicStyles = getShadowStyles(appConfig);
       if (dynamicStyles) {
         const dynamicStyleTag = document.createElement('style');
         dynamicStyleTag.textContent = dynamicStyles;
