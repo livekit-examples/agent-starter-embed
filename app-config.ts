@@ -7,4 +7,10 @@ export const APP_CONFIG_DEFAULTS: AppConfig = {
   supportsVideoInput: true,
   supportsScreenShare: true,
   isPreConnectBufferEnabled: true,
+  startButtonText: 'Chat with Agent',
+  companyName: 'LiveKit',
+  accent: '#1fd5f9',
+  accentDark: '#002cf2',
+  logo: '/lk-logo.svg',
+  logoDark: '/lk-logo-dark.svg',
 };

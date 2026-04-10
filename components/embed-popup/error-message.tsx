@@ -1,11 +1,17 @@
+import type { AppConfig } from '@/lib/types';
 import { EmbedErrorDetails } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
 interface ErrorMessageProps {
+  appConfig: AppConfig;
   error: EmbedErrorDetails | null;
 }
 
-export function ErrorMessage({ error }: ErrorMessageProps) {
+export function ErrorMessage({ appConfig, error }: ErrorMessageProps) {
+  const logo = appConfig.logo ?? '/lk-logo.svg';
+  const logoDark = appConfig.logoDark ?? '/lk-logo-dark.svg';
+  const companyName = appConfig.companyName ?? 'LiveKit';
+
   return (
     <div
       inert={error === null}
@@ -16,9 +22,9 @@ export function ErrorMessage({ error }: ErrorMessageProps) {
     >
       <div className="pl-3">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/lk-logo.svg" alt="LiveKit Logo" className="block size-6 dark:hidden" />
+        <img src={logo} alt={`${companyName} Logo`} className="block size-6 dark:hidden" />
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/lk-logo-dark.svg" alt="LiveKit Logo" className="hidden size-6 dark:block" />
+        <img src={logoDark} alt={`${companyName} Logo`} className="hidden size-6 dark:block" />
       </div>
 
       <div className="flex w-full flex-col justify-center gap-4 overflow-auto px-8 text-center">

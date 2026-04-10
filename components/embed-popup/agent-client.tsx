@@ -112,7 +112,12 @@ function AgentClient({ appConfig }: EmbedFixedAgentClientProps) {
       <RoomAudioRenderer />
       <StartAudio label="Start Audio" />
 
-      <Trigger error={error} popupOpen={popupOpen} onToggle={handleTogglePopup} />
+      <Trigger
+        appConfig={appConfig}
+        error={error}
+        popupOpen={popupOpen}
+        onToggle={handleTogglePopup}
+      />
 
       <motion.div
         inert={!popupOpen}
@@ -135,7 +140,7 @@ function AgentClient({ appConfig }: EmbedFixedAgentClientProps) {
       >
         <div className="bg-bg1 dark:bg-bg2 border-separator1 dark:border-separator2 ml-auto h-[480px] w-full rounded-[28px] border border-solid drop-shadow-md md:w-[360px]">
           <div className="relative h-full w-full">
-            <ErrorMessage error={error} />
+            <ErrorMessage appConfig={appConfig} error={error} />
             {!error && (
               <PopupViewMotion
                 appConfig={appConfig}
