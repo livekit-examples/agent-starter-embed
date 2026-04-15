@@ -108,14 +108,14 @@ function EmbedAgentClient({ appConfig }: AppProps) {
           <div className="pl-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={appConfig.logo ?? '/lk-logo.svg'}
-              alt={`${appConfig.companyName ?? 'LiveKit'} Logo`}
+              src={appConfig.logo || '/lk-logo.svg'}
+              alt={`${appConfig.companyName || 'LiveKit'} Logo`}
               className="block size-6 dark:hidden"
             />
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={appConfig.logoDark ?? '/lk-logo-dark.svg'}
-              alt={`${appConfig.companyName ?? 'LiveKit'} Logo`}
+              src={appConfig.logoDark || '/lk-logo-dark.svg'}
+              alt={`${appConfig.companyName || 'LiveKit'} Logo`}
               className="hidden size-6 dark:block"
             />
           </div>
