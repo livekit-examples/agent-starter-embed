@@ -1,8 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import Script from 'next/script';
-import { getSandboxId } from '@/lib/env';
 import './styles.css';
 
 const CODE_SNIPPET = `
@@ -16,12 +14,6 @@ function toggleTheme() {
 `.trim();
 
 export default function Page() {
-  const [sandboxId, setSandboxId] = useState('');
-
-  useEffect(() => {
-    setSandboxId(getSandboxId(window.location.origin));
-  }, []);
-
   function handleToggleTheme() {
     const doc = document.documentElement;
     const popupWrapper = document.querySelector('#lk-embed-wrapper');
@@ -52,7 +44,7 @@ export default function Page() {
       <p>
         <button onClick={handleToggleTheme}>toggle theme</button>
       </p>
-      {sandboxId && <Script src="/embed-popup.js" data-lk-sandbox-id={sandboxId} />}
+      <Script src="/embed-popup.js" />
     </div>
   );
 }

@@ -30,7 +30,6 @@ export default function useConnectionDetails(appConfig: AppConfig) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Sandbox-Id': appConfig.sandboxId ?? '',
         },
         body: JSON.stringify({
           room_config: appConfig.agentName

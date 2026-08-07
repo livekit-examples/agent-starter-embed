@@ -8,7 +8,6 @@ export interface CombinedTranscription extends TranscriptionSegment {
 export type ThemeMode = 'dark' | 'light' | 'system';
 
 export interface AppConfig {
-  sandboxId?: string;
   agentName?: string;
 
   supportsChatInput: boolean;
@@ -22,14 +21,6 @@ export interface AppConfig {
   accentDark?: string;
   logo?: string;
   logoDark?: string;
-}
-
-export interface SandboxConfig {
-  [key: string]:
-    | { type: 'string'; value: string }
-    | { type: 'number'; value: number }
-    | { type: 'boolean'; value: boolean }
-    | null;
 }
 
 export type EmbedErrorDetails = { title: React.ReactNode; description: React.ReactNode };

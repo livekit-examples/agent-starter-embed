@@ -112,10 +112,10 @@ http://localhost:3000 will respond to code changes in real time through [NextJS 
 
 ## Production deployment of embed-popup.js script
 
-Once your environment is set up and you've made any configuration changes, you can copy the embed code generated on the welcome page of your LiveKit Sandbox and paste it into your website.
+Once your environment is set up and you've made any configuration changes, you can copy the embed code generated on the welcome page of your deployment and paste it into your website.
 
 > [!IMPORTANT]
-> You MUST use the embed code generated on the welcome page of your LiveKit Sandbox to ensure LiveKit connection tokens are generated correctly.
+> You MUST use the embed code generated on the welcome page of your deployment to ensure LiveKit connection tokens are generated correctly.
 
 ## Debugging the build of embed-popup.js script
 
