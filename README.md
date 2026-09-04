@@ -1,5 +1,8 @@
 # Web Embed Agent Starter
 
+> [!WARNING]
+> **This template is deprecated.** Embedding a LiveKit agent into a website or app is now built directly into [LiveKit Cloud](https://cloud.livekit.io) and is being added to Agents UI ([livekit/components-js#1414](https://github.com/livekit/components-js/pull/1414)). We recommend using those instead of this template for new projects.
+
 This is a starter template for [LiveKit Agents](https://docs.livekit.io/agents) that provides an example of how you might approach building web embed using the [LiveKit JavaScript SDK](https://github.com/livekit/client-sdk-js). It supports [voice](https://docs.livekit.io/agents/start/voice-ai) and [transcriptions](https://docs.livekit.io/agents/build/text/).
 
 This template is built with Next.js and is free for you to use or modify as you see fit.
@@ -50,11 +53,6 @@ agent-starter-react/
 ```
 
 ## Getting started
-
-> [!TIP]
-> If you'd like to try this application without modification, you can deploy an instance in just a few clicks with [LiveKit Cloud Sandbox](https://cloud.livekit.io/projects/p_/sandbox/templates/agent-starter-embed).
-
-[![Open on LiveKit](https://img.shields.io/badge/Open%20on%20LiveKit%20Cloud-002CF2?style=for-the-badge&logo=external-link)](https://cloud.livekit.io/projects/p_/sandbox/templates/agent-starter-embed)
 
 Run the following command to automatically clone this template.
 
@@ -114,10 +112,10 @@ http://localhost:3000 will respond to code changes in real time through [NextJS 
 
 ## Production deployment of embed-popup.js script
 
-Once your environment is set up and you've made any configuration changes, you can copy the embed code generated on the welcome page of your LiveKit Sandbox and paste it into your website.
+Once your environment is set up and you've made any configuration changes, you can copy the embed code generated on the welcome page of your deployment and paste it into your website.
 
 > [!IMPORTANT]
-> You MUST use the embed code generated on the welcome page of your LiveKit Sandbox to ensure LiveKit connection tokens are generated correctly.
+> You MUST use the embed code generated on the welcome page of your deployment to ensure LiveKit connection tokens are generated correctly.
 
 ## Debugging the build of embed-popup.js script
 

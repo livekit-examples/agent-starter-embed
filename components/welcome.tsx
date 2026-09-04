@@ -5,7 +5,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'motion/react';
 import { CheckIcon, CopyIcon, HandPointingIcon } from '@phosphor-icons/react';
 import { APP_CONFIG_DEFAULTS } from '@/app-config';
-import { THEME_STORAGE_KEY, getSandboxId } from '@/lib/env';
+import { THEME_STORAGE_KEY } from '@/lib/env';
 import type { ThemeMode } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import EmbedPopupAgentClient from './embed-popup/agent-client';
@@ -19,7 +19,6 @@ export default function Welcome() {
   const selectedTab = tabParam ? (tabParam === 'popup' ? 'popup' : 'iframe') : 'iframe';
   const [, forceUpdate] = useState(0);
   const theme = (localStorage.getItem(THEME_STORAGE_KEY) as ThemeMode) ?? 'dark';
-  const IS_SANDBOX_ENVIRONMENT = process.env.NODE_ENV === 'production';
 
   const [copied, setCopied] = useState(false);
   const copyEmbedCode = useCallback((embedCode: string) => {
@@ -42,12 +41,7 @@ export default function Welcome() {
     return url.toString();
   }, []);
 
-  const embedSandboxId = useMemo(() => getSandboxId(window.location.origin), []);
-
-  const popupEmbedCode = useMemo(
-    () => `<script\n  src="${popupEmbedUrl}"\n  data-lk-sandbox-id="${embedSandboxId}"\n></script>`,
-    [popupEmbedUrl, embedSandboxId]
-  );
+  const popupEmbedCode = useMemo(() => `<script src="${popupEmbedUrl}"></script>`, [popupEmbedUrl]);
   const iframeEmbedCode = useMemo(() => {
     return `<iframe\n  src="${iframeEmbedUrl}"\n  style="width: 320px; height: 64px;"\n></iframe>`;
   }, [iframeEmbedUrl]);
@@ -181,27 +175,24 @@ export default function Welcome() {
                   </button>
                 </div>
               </pre>
-              {/* hide build/test instructions in sandbox environment on Vercel */}
-              {!IS_SANDBOX_ENVIRONMENT && (
-                <div className="my-4">
-                  <p className="text-fg4 overflow-hidden text-sm text-ellipsis whitespace-nowrap">
-                    To apply local changes, run{' '}
-                    <code className="text-fg0">pnpm build-embed-popup-script</code>.
-                  </p>
-                  <p className="text-fg4 overflow-hidden text-sm text-ellipsis whitespace-nowrap">
-                    Test your latest build at{' '}
-                    <a
-                      href={popupTestUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="underline"
-                    >
-                      {popupTestUrl}
-                    </a>
-                    .
-                  </p>
-                </div>
-              )}
+              <div className="my-4">
+                <p className="text-fg4 overflow-hidden text-sm text-ellipsis whitespace-nowrap">
+                  To apply local changes, run{' '}
+                  <code className="text-fg0">pnpm build-embed-popup-script</code>.
+                </p>
+                <p className="text-fg4 overflow-hidden text-sm text-ellipsis whitespace-nowrap">
+                  Test your latest build at{' '}
+                  <a
+                    href={popupTestUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline"
+                  >
+                    {popupTestUrl}
+                  </a>
+                  .
+                </p>
+              </div>
             </div>
             <div className="flex justify-center pt-8">
               <div className="text-fgAccent flex gap-1">

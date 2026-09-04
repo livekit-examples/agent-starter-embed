@@ -1,16 +1,13 @@
 'use client';
 
-import { useMemo } from 'react';
 import Script from 'next/script';
 import { HandPointingIcon } from '@phosphor-icons/react';
 import { ThemeToggle } from '@/components/theme-toggle';
-import { getSandboxId } from '@/lib/env';
 
 export default function PopupPage() {
-  const sandboxId = useMemo(() => getSandboxId(window.location.origin), []);
   return (
     <div className="grid min-h-screen place-items-center">
-      <Script src="/embed-popup.js" data-lk-sandbox-id={sandboxId} />
+      <Script src="/embed-popup.js" />
       <div className="space-y-10">
         <div className="flex justify-center">
           <ThemeToggle className="w-fit" />
